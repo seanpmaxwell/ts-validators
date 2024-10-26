@@ -1,0 +1,11 @@
+# Created by .ignore support plugin (hsz.mobi)
+
+# ignore dev files
+src
+test
+
+# not needed npm stuff
+package-lock.json
+node_modules
+tsconfig.json
+tsconfig.build.json
