@@ -1,0 +1,35 @@
+{
+  "name": "ts-validators",
+  "version": "1.0.0",
+  "description": "A collection of commonly used validator function for TypeScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "ts-node ./src/test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seanpmaxwell/ts-validators.git"
+  },
+  "keywords": [
+    "typescript",
+    "types",
+    "validators",
+    "jet-schema",
+    "schema",
+    "type",
+    "predicate",
+    "validate",
+    "check"
+  ],
+  "author": "sean maxwell",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/seanpmaxwell/ts-validators/issues"
+  },
+  "homepage": "https://github.com/seanpmaxwell/ts-validators#readme",
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.4"
+  }
+}
