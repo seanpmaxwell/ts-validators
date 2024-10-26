@@ -15,7 +15,7 @@ const EMAIL_RGX = /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-
 
 // Nullables
 export const isUndef = ((arg: unknown): arg is undefined => arg === undefined);
-export const isNull = ((arg: unknown): arg is undefined => arg === null);
+export const isNull = ((arg: unknown): arg is null => arg === null);
 export const isNoU = orNul(isUndef);
 
 // Boolean
