@@ -1,6 +1,8 @@
 // **** Types **** //
 
 export type TFunc = (...args: any[]) => any;
+export type TEmail = `${string}@${string}`;
+export type TColor = `#${string}`;
 
 
 // **** Variables **** //
@@ -78,19 +80,19 @@ export const isNulFnArr = orNul(isFnArr);
 export const isOptNulFnArr = orNul(isOptFnArr);
 
 // Color
-export const isColor = isRgx(COLOR_RGX);
+export const isColor = isRgx<TColor>(COLOR_RGX);
 export const isOptColor = orOpt(isColor);
 export const isNulColor = orNul(isColor);
 export const isOptNulColor = orNul(isOptColor);
 
 // Email
-export const isEmail = isRgx(EMAIL_RGX);
+export const isEmail = isRgx<TEmail>(EMAIL_RGX);
 export const isOptEmail = orOpt(isEmail);
 export const isNulEmail = orNul(isEmail);
 export const isOptNulEmail = orNul(isOptEmail);
 
 // Alpha-Numeric String
-export const isAlphaNumStr = isRgx(ALPHA_NUMERIC);
+export const isAlphaNumStr = isRgx<string>(ALPHA_NUMERIC);
 export const isOptAlphaNumStr = orOpt(isAlphaNumStr);
 export const isNulAlphaNumStr = orNul(isAlphaNumStr);
 export const isOptNulAlphaNumStr = orNul(isOptAlphaNumStr);
@@ -252,8 +254,8 @@ function isArr<T>(cb: ((arg: unknown) => arg is T)) {
  * See if a string satisfies the regex. NOTE: this lets an empty string be a 
  * valid value.
  */
-function isRgx(rgx: RegExp) {
-  return (arg: unknown): arg is string => {
+function isRgx<T>(rgx: RegExp) {
+  return (arg: unknown): arg is T => {
     return (isStr(arg) && (arg === '' || rgx.test(arg)));
   }
 }
