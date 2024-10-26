@@ -271,6 +271,6 @@ function isRgx(rgx: RegExp) {
  */
 function checkType<T>(type: string) {
   return (arg: unknown): arg is T => {
-    return typeof arg === type;
+    return typeof arg === type && (type === 'object' ? (arg !== null) : true);
   }
 }
