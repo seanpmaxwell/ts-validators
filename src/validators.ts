@@ -7,7 +7,6 @@ export type TFunc = (...args: any[]) => any;
 
 const EMAIL_RGX = /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9-]*\.)+[A-Z]{2,}$/i,
   COLOR_RGX = new RegExp(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/),
-  URL_RGX = new RegExp('^(?!.*//)(?!.*-/)(?!.*/-)(?!.*_/)(?!.*/_)[A-Za-z0-9/][-_A-Za-z0-9/]*$'),
   ALPHA_NUMERIC = new RegExp('^[a-zA-Z0-9]*$');
 
 
@@ -89,13 +88,6 @@ export const isEmail = isRgx(EMAIL_RGX);
 export const isOptEmail = orOpt(isEmail);
 export const isNulEmail = orNul(isEmail);
 export const isOptNulEmail = orNul(isOptEmail);
-
-// Is it a valid url (useful for chart-urls). Only forward-slash, letters, 
-// numbers, underscores and dashes.
-export const isUrl = isRgx(URL_RGX);
-export const isOptUrl = orOpt(isUrl);
-export const isNulUrl = orNul(isUrl);
-export const isOptNulUrl = orNul(isOptUrl);
 
 // Alpha-Numeric String
 export const isAlphaNumStr = isRgx(ALPHA_NUMERIC);
