@@ -187,7 +187,7 @@ export function nonNullable<T>(cb: ((arg: unknown) => arg is T)) {
 }
 
 /**
- * Check if non object array.
+ * Check if non-array object.
  */
 export function isNonArrObj(
   arg: unknown,
