@@ -263,8 +263,13 @@ function isRgx<T>(rgx: RegExp) {
 /**
  * Wrapper to check basic type.
  */
-function checkType<T>(type: string) {
+function _checkType<T>(type: string) {
   return (arg: unknown): arg is T => {
-    return typeof arg === type && (type === 'object' ? (arg !== null) : true);
-  }
+    return (
+      typeof arg === type &&
+      (type === 'object' ? (arg !== null) : true) &&
+      (type === 'number' ? !isNaN(arg as number) : true)
+    );
+  };
 }
+
