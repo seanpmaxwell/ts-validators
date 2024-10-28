@@ -20,7 +20,7 @@ export const isNull = ((arg: unknown): arg is null => arg === null);
 export const isNoU = orNul(isUndef);
 
 // Boolean
-export const isBool = checkType<boolean>('boolean');
+export const isBool = _checkType<boolean>('boolean');
 export const isOptBool = orOpt(isBool);
 export const isNulBool = orNul(isBool);
 export const isOptNulBool = orNul(isOptBool);
@@ -30,7 +30,7 @@ export const isNulBoolArr = orNul(isBoolArr);
 export const isOptNulBoolArr = orNul(isOptBoolArr);
 
 // Number
-export const isNum = checkType<number>('number');
+export const isNum = _checkType<number>('number');
 export const isOptNum = orOpt(isNum);
 export const isNulNum = orNul(isNum);
 export const isOptNulNum = orNul(isOptNum);
@@ -40,7 +40,7 @@ export const isNulNumArr = orNul(isNumArr);
 export const isOptNulNumArr = orNul(isOptNumArr);
 
 // String
-export const isStr = checkType<string>('string');
+export const isStr = _checkType<string>('string');
 export const isOptStr = orOpt(isStr);
 export const isNulStr = orNul(isStr);
 export const isOptNulStr = orNul(isOptStr);
@@ -60,7 +60,7 @@ export const isNulDateArr = orNul(isDateArr);
 export const isOptNulDateArr = orNul(isOptDateArr);
 
 // Object
-export const isObj = checkType<object>('object');
+export const isObj = _checkType<object>('object');
 export const isOptObj = orOpt(isObj);
 export const isNulObj = orNul(isObj);
 export const isOptNulObj = orNul(isOptObj);
@@ -70,7 +70,7 @@ export const isNulObjArr = orNul(isObjArr);
 export const isOptNulObjArr = orNul(isOptObjArr);
 
 // Function
-export const isFn = checkType<TFunc>('function');
+export const isFn = _checkType<TFunc>('function');
 export const isOptFn = orOpt(isFn);
 export const isNulFn = orNul(isFn);
 export const isOptNulFn = orNul(isOptFn);
@@ -98,7 +98,7 @@ export const isNulAlphaNumStr = orNul(isAlphaNumStr);
 export const isOptNulAlphaNumStr = orNul(isOptAlphaNumStr);
 
 
-// **** Array Content **** //
+// **** Misc **** //
 
 /**
  * Is an item in an array.
@@ -131,9 +131,6 @@ export function isOptOrInArr<T extends readonly unknown[]>(
   };
 }
 
-
-// **** Enums **** //
-
 /**
  * Check is value satisfies enum.
  */
@@ -147,31 +144,24 @@ export function isEnumVal<T>(arg: T): ((arg: unknown) => arg is T) {
 /**
  * Get the values of an enum object.
  */
-function _getEnumVals(arg: unknown) {
+function _getEnumVals(arg: unknown): unknown[] {
   if (isNonArrObj(arg)) {
-    const keys = _getEnumKeys(arg);
-    return keys.map(key => arg[key]);
-  }
-  throw Error('"getEnumVals" be an non-array object');
-}
-
-/**
- * Get the keys of an enum object.
- */
-export function _getEnumKeys(arg: unknown): string[] {
-  if (isNonArrObj(arg)) {
-    return Object.keys(arg).reduce((arr: any[], key) => {
+    // Get keys
+    const resp = Object.keys(arg).reduce((arr: any[], key) => {
       if (!arr.includes(key)) {
         arr.push(arg[key]);
       }
       return arr;
     }, []);
+    // Check if string or number enum
+    if (isNum(arg[resp[0]])) {
+      return resp.map(item => arg[item]);
+    } else {
+      return resp;
+    }
   }
   throw Error('"getEnumKeys" be an non-array object');
 }
-
-
-// **** Misc **** //
 
 /**
  * Extract null/undefined from a validator function.

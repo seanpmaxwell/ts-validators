@@ -1,16 +1,18 @@
-import express, { Request, Response } from 'express';
-
-import { isNulBoolArr } from './validators';
-import check from './express-checker';
-import { isNumArr } from './validators';
+import { isNulBoolArr, isEnumVal } from './validators';
 
 
-
-console.log(isNulBoolArr([false, false, true]));
-
-
-// Make check return type through check function
-async function add(req: Request, res: Response) {
-  const ids = check(req.body, 'ids', isNumArr);
-  res.status(200).end();
+enum Scopes {
+  Public = 'public',
+  Private = 'private',
 }
+
+enum ScopesAlt {
+  Public,
+  Private,
+}
+
+// Run some test
+console.log(isNulBoolArr([false, false, true]));
+console.log(isEnumVal(Scopes)('public'))
+console.log(isEnumVal(ScopesAlt)(1))
+console.log(isEnumVal(ScopesAlt)('private'))
