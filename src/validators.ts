@@ -7,7 +7,7 @@ export type TColor = `#${string}`;
 
 // **** Variables **** //
 
-const EMAIL_RGX = /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9-]*\.)+[A-Z]{2,}$/i,
+const EMAIL_RGX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   COLOR_RGX = new RegExp(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/),
   ALPHA_NUMERIC = new RegExp('^[a-zA-Z0-9]*$');
 
@@ -244,10 +244,10 @@ function isArr<T>(cb: ((arg: unknown) => arg is T)) {
  * See if a string satisfies the regex. NOTE: this lets an empty string be a 
  * valid value.
  */
-function isRgx<T>(rgx: RegExp) {
-  return (arg: unknown): arg is T => {
-    return (isStr(arg) && (arg === '' || rgx.test(arg)));
-  }
+function _isRgx(rgx: RegExp) {
+  return (arg: unknown): arg is string => {
+    return (isStr(arg) && arg.length < 254 && (arg === '' || rgx.test(arg)));
+  };
 }
 
 /**
