@@ -147,15 +147,15 @@ export function isEnumVal<T>(arg: T): ((arg: unknown) => arg is T) {
 function _getEnumVals(arg: unknown): unknown[] {
   if (isNonArrObj(arg)) {
     // Get keys
-    const resp = Object.keys(arg).reduce((arr: any[], key) => {
+    const resp = Object.keys(arg).reduce((arr: unknown[], key) => {
       if (!arr.includes(key)) {
         arr.push(arg[key]);
       }
       return arr;
     }, []);
     // Check if string or number enum
-    if (isNum(arg[resp[0]])) {
-      return resp.map(item => arg[item]);
+    if (isNum(arg[resp[0] as string])) {
+      return resp.map(item => arg[item as string]);
     } else {
       return resp;
     }
