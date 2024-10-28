@@ -134,11 +134,11 @@ export function isOptOrInArr<T extends readonly unknown[]>(
 /**
  * Check is value satisfies enum.
  */
-export function isEnumVal<T>(arg: T): ((arg: unknown) => arg is T) {
+export function isEnumVal<T>(arg: T): ((arg: unknown) => arg is T[keyof T]) {
   const vals = _getEnumVals(arg);
-  return (arg: unknown): arg is T => {
+  return (arg: unknown): arg is T[keyof T] => {
     return vals.some(val => arg === val);
-  }
+  };
 }
 
 /**
