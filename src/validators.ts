@@ -3,6 +3,7 @@
 export type TFunc = (...args: any[]) => any;
 export type TEmail = `${string}@${string}`;
 export type TColor = `#${string}`;
+export type TBasicObj = Record<string, unknown>;
 
 
 // **** Variables **** //
@@ -135,32 +136,25 @@ export function isOptOrInArr<T extends readonly unknown[]>(
  * Check is value satisfies enum.
  */
 export function isEnumVal<T>(arg: T): ((arg: unknown) => arg is T[keyof T]) {
-  const vals = _getEnumVals(arg);
-  return (arg: unknown): arg is T[keyof T] => {
-    return vals.some(val => arg === val);
-  };
-}
-
-/**
- * Get the values of an enum object.
- */
-function _getEnumVals(arg: unknown): unknown[] {
-  if (isNonArrObj(arg)) {
-    // Get keys
-    const resp = Object.keys(arg).reduce((arr: unknown[], key) => {
-      if (!arr.includes(key)) {
-        arr.push(arg[key]);
-      }
-      return arr;
-    }, []);
-    // Check if string or number enum
-    if (isNum(arg[resp[0] as string])) {
-      return resp.map(item => arg[item as string]);
-    } else {
-      return resp;
-    }
+  // Check object
+  if (!isBasicObj(arg)) {
+    throw Error('parameter be an non-array object');
   }
-  throw Error('"getEnumKeys" be an non-array object');
+  // Get keys
+  let resp = Object.keys(arg).reduce((arr: unknown[], key) => {
+    if (!arr.includes(key)) {
+      arr.push(arg[key]);
+    }
+    return arr;
+  }, []);
+  // Check if string or number enum
+  if (isNum(arg[resp[0] as string])) {
+    resp = resp.map(item => arg[item as string]);
+  }
+  // Return validator function
+  return (arg: unknown): arg is T[keyof T] => {
+    return resp.some(val => arg === val);
+  };
 }
 
 /**
@@ -179,10 +173,8 @@ export function nonNullable<T>(cb: ((arg: unknown) => arg is T)) {
 /**
  * Check if non-array object.
  */
-export function isNonArrObj(
-  arg: unknown,
-): arg is Record<string, unknown> {
-  return typeof arg === 'object' && !Array.isArray(arg);
+export function isBasicObj(arg: unknown): arg is TBasicObj {
+  return isObj(arg) && !Object.keys(arg).some(key => !isStr(key));
 }
 
 /**
