@@ -1,6 +1,8 @@
 // **** Types **** //
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TFunc = (...args: any[]) => any;
+
 export type TEmail = `${string}@${string}`;
 export type TColor = `#${string}`;
 export type TBasicObj = Record<string, unknown>;
@@ -174,7 +176,7 @@ export function nonNullable<T>(cb: ((arg: unknown) => arg is T)) {
  * Check if non-array object.
  */
 export function isBasicObj(arg: unknown): arg is TBasicObj {
-  return isObj(arg) && !Object.keys(arg).some(key => !isStr(key));
+  return isObj(arg) && !Array.isArray(arg) && isStrArr(Object.keys(arg));
 }
 
 /**

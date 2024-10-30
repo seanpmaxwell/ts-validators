@@ -4,7 +4,9 @@
   "description": "A collection of commonly used validator function for TypeScript",
   "main": "index.js",
   "scripts": {
-    "test": "ts-node ./src/test.ts"
+    "test": "vitest",
+    "clean-install": "rm -rf ./node_modules && rm -r package-lock.json && npm i",
+    "lint": "eslint --flag unstable_ts_config"
   },
   "repository": {
     "type": "git",
@@ -28,13 +30,17 @@
   },
   "homepage": "https://github.com/seanpmaxwell/ts-validators#readme",
   "devDependencies": {
-    "@types/express": "^5.0.0",
+    "@eslint/js": "^9.11.1",
+    "@stylistic/eslint-plugin-ts": "^2.8.0",
+    "@types/eslint__js": "^8.42.3",
+    "@types/node": "^22.8.1",
+    "eslint": "^9.11.1",
+    "eslint-plugin-n": "^17.10.3",
+    "jiti": "^2.3.3",
     "ts-node": "^10.9.2",
-    "tslib": "^2.6.3",
-    "typescript": "^5.5.4"
-  },
-  "dependencies": {
-    "express": "^4.21.1",
-    "jet-schema": "^1.0.6"
+    "tslib": "^2.8.0",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.8.0",
+    "vitest": "^2.1.4"
   }
 }
