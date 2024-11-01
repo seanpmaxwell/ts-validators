@@ -2,7 +2,7 @@
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TFunc = (...args: any[]) => any;
-
+export type TEnum = Record<string, string | number>;
 export type TEmail = `${string}@${string}`;
 export type TColor = `#${string}`;
 export type TBasicObj = Record<string, unknown>;
@@ -193,6 +193,43 @@ export function checkObjEntries(
       }
     }
   }
+  return true;
+}
+
+/**
+ * Check if unknown is a valid enum object.
+ */
+export function isEnum(arg: unknown): arg is TEnum {
+  // Check is non-array object
+  if (!(isObj(arg) && !Array.isArray(arg))) {
+    return false;
+  }
+  // Check if string or number enum
+  const param = (arg as TBasicObj),
+    keys = Object.keys(param),
+    middle = Math.floor(keys.length / 2);
+  // ** String Enum ** //
+  if (!isNum(param[keys[middle]])) {
+    return checkObjEntries(arg, (key, val) => {
+      return isStr(key) && isStr(val);
+    });
+  }
+  // ** Number Enum ** //
+  // Enum key length will always be even
+  if (keys.length % 2 !== 0) {
+    return false;
+  }
+  // Check key/values
+  for (let i = 0; i < middle; i++) {
+    const thisKey = keys[i],
+      thisVal = param[thisKey],
+      thatKey = keys[i + middle],
+      thatVal = param[thatKey];
+    if (!(thisVal === thatKey && thisKey === String(thatVal))) {
+      return false;
+    }
+  }
+  // Return
   return true;
 }
 

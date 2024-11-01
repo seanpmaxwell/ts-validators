@@ -70,6 +70,7 @@ import {
   nonNullable,
   isBasicObj,
   checkObjEntries,
+  isEnum,
 } from '../src/validators';
 
 
@@ -79,7 +80,7 @@ test('test User all default values', () => {
     Public = 'public',
     Private = 'private',
   }
-  
+
   enum ScopesAlt {
     Public,
     Private,
@@ -300,4 +301,8 @@ test('test User all default values', () => {
   expect(checkObjEntries({ a: 1, b: 2, c: 'asdf' }, (key, val) => {
     return isStr(key) && isNum(val);
   })).toStrictEqual(false);
+
+  // Check "isEnum"
+  expect(isEnum(Scopes)).toStrictEqual(true);
+  expect(isEnum(ScopesAlt)).toStrictEqual(true);
 });
