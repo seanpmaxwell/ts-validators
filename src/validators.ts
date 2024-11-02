@@ -107,6 +107,8 @@ export const isNulAlphaNumStr = orNul(isAlphaNumStr);
 export const isOptNulAlphaNumStr = orNul(isOptAlphaNumStr);
 
 // Basic Objects
+export const isBasicObj = (arg: unknown): arg is TBasicObj => (isObj(arg) && 
+  !Array.isArray(arg) && isStrArr(Object.keys(arg)));
 export const isOptBasicObj = orOpt(isBasicObj);
 export const isOptNulBasicObj = orNul(isOptBasicObj);
 
@@ -136,13 +138,6 @@ export function nonNullable<T>(cb: ((arg: unknown) => arg is T)) {
       return cb(arg);
     }
   };
-}
-
-/**
- * Check if non-array object.
- */
-export function isBasicObj(arg: unknown): arg is TBasicObj {
-  return isObj(arg) && !Array.isArray(arg) && isStrArr(Object.keys(arg));
 }
 
 /**
