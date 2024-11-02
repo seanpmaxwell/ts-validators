@@ -124,8 +124,6 @@ export const isOptNulEnumVal = <T>(arg: T) => _isEnumValBase<T, true, true>(arg,
 
 // **** Misc **** //
 
-
-
 /**
  * Extract null/undefined from a validator function.
  */
