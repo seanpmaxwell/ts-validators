@@ -75,7 +75,6 @@ import {
   isOptEnumVal,
   isNulEnumVal,
   transform,
-  isNumArr,
 } from '../src/validators';
 
 
