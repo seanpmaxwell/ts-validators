@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 // **** Types **** //
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -6,6 +7,10 @@ export type TEnum = Record<string, string | number>;
 export type TEmail = `${string}@${string}`;
 export type TColor = `#${string}`;
 export type TBasicObj = Record<string, unknown>;
+
+// Add nullables
+type AddNull<T, N> = (N extends true ? T | null : T);
+type AddNullables<T, O, N> = (O extends true ? AddNull<T, N> | undefined  : AddNull<T, N>);
 
 
 // **** Variables **** //
@@ -104,12 +109,17 @@ export const isOptNulAlphaNumStr = orNul(isOptAlphaNumStr);
 export const isOptBasicObj = orOpt(isBasicObj);
 export const isOptNulBasicObj = orNul(isOptBasicObj);
 
+// Is in array
+export const isInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T>(arg);
+export const isOptOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T>(arg, true);
+export const isNulOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T>(arg, false, true);
+export const isOptNulOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T>(arg, true, true);
+
 // Enums
 export const isEnumVal = <T>(arg: T) => _isEnumValBase<T>(arg);
 export const isOptEnumVal = <T>(arg: T) => _isEnumValBase<T>(arg, true);
 export const isNulEnumVal = <T>(arg: T) => _isEnumValBase<T>(arg, false, true);
-export const isOptNulEnumVal = <T>(arg: T) => _isEnumValBase<T>(arg, true, 
-  true);
+export const isOptNulEnumVal = <T>(arg: T) => _isEnumValBase<T>(arg, true, true);
 
 
 // **** Misc **** //
@@ -117,10 +127,22 @@ export const isOptNulEnumVal = <T>(arg: T) => _isEnumValBase<T>(arg, true,
 /**
  * Is an item in an array.
  */
-export function isInArr<T extends readonly unknown[]>(
+export function _isInArrBase<
+  T extends readonly unknown[],
+  O extends boolean = boolean,
+  N extends boolean = boolean
+>(
   arr: T,
-): (arg: unknown) => arg is T[number] {
-  return (arg: unknown): arg is T[number] => {
+  optional?: O,
+  nullable?: N,
+): (arg: unknown) => arg is AddNullables<T[number], O, N> {
+  return (arg: unknown): arg is AddNullables<T[number], O, N> => {
+    if (isUndef(arg)) {
+      return !!optional;
+    }
+    if (isNull(arg)) {
+      return !!nullable;
+    }
     for (const item of arr) {
       if (arg === item) {
         return true;
@@ -131,28 +153,16 @@ export function isInArr<T extends readonly unknown[]>(
 }
 
 /**
- * Is an item in an array or undefined.
- */
-export function isOptOrInArr<T extends readonly unknown[]>(
-  arr: T,
-): (arg: unknown) => arg is T[number] | undefined {
-  const fn = isInArr<T>(arr);
-  return (arg: unknown): arg is T[number] | undefined => {
-    if (arg === undefined) {
-      return true;
-    }
-    return fn(arg);
-  };
-}
-
-/**
  * Check is value satisfies enum.
  */
-function _isEnumValBase<T>(
+function _isEnumValBase<T, 
+  O extends boolean = boolean,
+  N extends boolean = boolean
+>(
   arg: T,
-  optional?: boolean,
-  nullable?: boolean,
-): ((arg: unknown) => arg is T[keyof T]) {
+  optional?: O,
+  nullable?: N,
+): ((arg: unknown) => arg is AddNullables<T[keyof T], O, N>) {
   // Check object
   if (!isBasicObj(arg)) {
     throw Error('parameter be an non-array object');
@@ -169,11 +179,11 @@ function _isEnumValBase<T>(
     resp = resp.map(item => arg[item as string]);
   }
   // Return validator function
-  return (arg: unknown): arg is T[keyof T] => {
+  return (arg: unknown): arg is AddNullables<T[keyof T], O, N> => {
     if (isUndef(arg)) {
       return !!optional;
     }
-    if (arg === null) {
+    if (isNull(arg)) {
       return !!nullable;
     }
     return resp.some(val => arg === val);

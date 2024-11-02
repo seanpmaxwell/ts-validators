@@ -275,11 +275,14 @@ test('test User all default values', () => {
   expect(isOptNulAlphaNumStr(null)).toStrictEqual(true);
   expect(isOptNulAlphaNumStr(undefined)).toStrictEqual(true);
 
+  // This will make the type '1' | '2' | '3' instead of just string[]
+  const arr = ['1', '2', '3'] as const;
+
   // Is in Array
-  expect(isInArr(['1', '2', '3'])('1')).toStrictEqual(true);
-  expect(isInArr(['1', '2', '3'])(1)).toStrictEqual(false);
-  expect(isOptOrInArr(['1', '2', '3'])('1')).toStrictEqual(true);
-  expect(isOptOrInArr(['1', '2', '3'])(undefined)).toStrictEqual(true);
+  expect(isInArr(arr)('1')).toStrictEqual(true);
+  expect(isInArr(arr)(1)).toStrictEqual(false);
+  expect(isOptOrInArr(arr)('1')).toStrictEqual(true);
+  expect(isOptOrInArr(arr)(undefined)).toStrictEqual(true);
   
   // Enums
   expect(isEnumVal(Scopes)('public')).toStrictEqual(true);
