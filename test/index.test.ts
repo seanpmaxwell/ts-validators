@@ -71,6 +71,9 @@ import {
   isBasicObj,
   checkObjEntries,
   isEnum,
+  isOptNulEnumVal,
+  isOptEnumVal,
+  isNulEnumVal,
 } from '../src/validators';
 
 
@@ -282,6 +285,11 @@ test('test User all default values', () => {
   expect(isEnumVal(Scopes)('public')).toStrictEqual(true);
   expect(isEnumVal(ScopesAlt)(1)).toStrictEqual(true);
   expect(isEnumVal(ScopesAlt)('private')).toStrictEqual(false);
+  expect(isEnum(Scopes)).toStrictEqual(true);
+  expect(isEnum(ScopesAlt)).toStrictEqual(true);
+  expect(isOptEnumVal(ScopesAlt)(undefined)).toStrictEqual(true);
+  expect(isNulEnumVal(ScopesAlt)(null)).toStrictEqual(true);
+  expect(isOptNulEnumVal(ScopesAlt)(null)).toStrictEqual(true);
 
   // Non-Nullable
   expect(nonNullable(isNulStr)('asdf')).toStrictEqual(true);
@@ -301,8 +309,4 @@ test('test User all default values', () => {
   expect(checkObjEntries({ a: 1, b: 2, c: 'asdf' }, (key, val) => {
     return isStr(key) && isNum(val);
   })).toStrictEqual(false);
-
-  // Check "isEnum"
-  expect(isEnum(Scopes)).toStrictEqual(true);
-  expect(isEnum(ScopesAlt)).toStrictEqual(true);
 });

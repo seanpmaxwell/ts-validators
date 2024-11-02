@@ -100,6 +100,17 @@ export const isOptAlphaNumStr = orOpt(isAlphaNumStr);
 export const isNulAlphaNumStr = orNul(isAlphaNumStr);
 export const isOptNulAlphaNumStr = orNul(isOptAlphaNumStr);
 
+// Basic Objects
+export const isOptBasicObj = orOpt(isBasicObj);
+export const isOptNulBasicObj = orNul(isOptBasicObj);
+
+// Enums
+export const isEnumVal = <T>(arg: T) => _isEnumValBase<T>(arg);
+export const isOptEnumVal = <T>(arg: T) => _isEnumValBase<T>(arg, true);
+export const isNulEnumVal = <T>(arg: T) => _isEnumValBase<T>(arg, false, true);
+export const isOptNulEnumVal = <T>(arg: T) => _isEnumValBase<T>(arg, true, 
+  true);
+
 
 // **** Misc **** //
 
@@ -137,7 +148,11 @@ export function isOptOrInArr<T extends readonly unknown[]>(
 /**
  * Check is value satisfies enum.
  */
-export function isEnumVal<T>(arg: T): ((arg: unknown) => arg is T[keyof T]) {
+function _isEnumValBase<T>(
+  arg: T,
+  optional?: boolean,
+  nullable?: boolean,
+): ((arg: unknown) => arg is T[keyof T]) {
   // Check object
   if (!isBasicObj(arg)) {
     throw Error('parameter be an non-array object');
@@ -155,6 +170,12 @@ export function isEnumVal<T>(arg: T): ((arg: unknown) => arg is T[keyof T]) {
   }
   // Return validator function
   return (arg: unknown): arg is T[keyof T] => {
+    if (isUndef(arg)) {
+      return !!optional;
+    }
+    if (arg === null) {
+      return !!nullable;
+    }
     return resp.some(val => arg === val);
   };
 }
