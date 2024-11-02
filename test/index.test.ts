@@ -319,7 +319,7 @@ test('test User all default values', () => {
 
   // Check transform function
   const isNumArrWithParse = transform(JSON.parse, isNumArr);
-  isNumArrWithParse('[1,2,3]', val => {
+  expect(isNumArrWithParse('[1,2,3]', val => {
     expect(isNumArr(val)).toStrictEqual(true);
-  });
+  })).toStrictEqual(true);
 });
