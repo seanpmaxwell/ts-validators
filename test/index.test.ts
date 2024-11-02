@@ -290,6 +290,7 @@ test('test User all default values', () => {
   expect(isOptEnumVal(ScopesAlt)(undefined)).toStrictEqual(true);
   expect(isNulEnumVal(ScopesAlt)(null)).toStrictEqual(true);
   expect(isOptNulEnumVal(ScopesAlt)(null)).toStrictEqual(true);
+  expect(isOptNulEnumVal(ScopesAlt)('private')).toStrictEqual(true);
 
   // Non-Nullable
   expect(nonNullable(isNulStr)('asdf')).toStrictEqual(true);
