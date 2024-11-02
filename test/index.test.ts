@@ -74,6 +74,8 @@ import {
   isOptNulEnumVal,
   isOptEnumVal,
   isNulEnumVal,
+  transform,
+  isNumArr,
 } from '../src/validators';
 
 
@@ -314,4 +316,10 @@ test('test User all default values', () => {
   expect(checkObjEntries({ a: 1, b: 2, c: 'asdf' }, (key, val) => {
     return isStr(key) && isNum(val);
   })).toStrictEqual(false);
+
+  // Check transform function
+  const isNumArrWithParse = transform(JSON.parse, isNumArr);
+  isNumArrWithParse('[1,2,3]', val => {
+    expect(isNumArr(val)).toStrictEqual(true);
+  });
 });

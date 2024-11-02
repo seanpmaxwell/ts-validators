@@ -11,6 +11,7 @@ export type TBasicObj = Record<string, unknown>;
 // Add nullables
 type AddNull<T, N> = (N extends true ? T | null : T);
 type AddNullables<T, O, N> = (O extends true ? AddNull<T, N> | undefined  : AddNull<T, N>);
+type TValidateWithTransform<T> = (arg: unknown, cb?: (arg: T) => void) => arg is T;
 
 
 // **** Variables **** //
@@ -196,6 +197,22 @@ export function isEnum(arg: unknown): arg is TEnum {
   }
   // Return
   return true;
+}
+
+/**
+ * Transform a value before checking it.
+ */
+export function transform<T>(
+  transFn: TFunc,
+  vldt: ((arg: unknown) => arg is T),
+): TValidateWithTransform<T> {
+  return (arg: unknown, cb?: (arg: T) => void): arg is T => {
+    if (arg !== undefined) {
+      arg = transFn(arg);
+    }
+    cb?.(arg as T);
+    return vldt(arg);
+  };
 }
 
 
