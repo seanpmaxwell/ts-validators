@@ -110,85 +110,21 @@ export const isOptBasicObj = orOpt(isBasicObj);
 export const isOptNulBasicObj = orNul(isOptBasicObj);
 
 // Is in array
-export const isInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T>(arg);
-export const isOptOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T>(arg, true);
-export const isNulOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T>(arg, false, true);
-export const isOptNulOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T>(arg, true, true);
+export const isInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, false, false>(arg, false, false);
+export const isOptOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, true, false>(arg, true, false);
+export const isNulOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, false, true>(arg, false, true);
+export const isOptNulOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, true, true>(arg, true, true);
 
 // Enums
-export const isEnumVal = <T>(arg: T) => _isEnumValBase<T>(arg);
-export const isOptEnumVal = <T>(arg: T) => _isEnumValBase<T>(arg, true);
-export const isNulEnumVal = <T>(arg: T) => _isEnumValBase<T>(arg, false, true);
-export const isOptNulEnumVal = <T>(arg: T) => _isEnumValBase<T>(arg, true, true);
+export const isEnumVal = <T>(arg: T) => _isEnumValBase<T, false, false>(arg, false, false);
+export const isOptEnumVal = <T>(arg: T) => _isEnumValBase<T, true, false>(arg, true, false);
+export const isNulEnumVal = <T>(arg: T) => _isEnumValBase<T, false, true>(arg, false, true);
+export const isOptNulEnumVal = <T>(arg: T) => _isEnumValBase<T, true, true>(arg, true, true);
 
 
 // **** Misc **** //
 
-/**
- * Is an item in an array.
- */
-export function _isInArrBase<
-  T extends readonly unknown[],
-  O extends boolean = boolean,
-  N extends boolean = boolean
->(
-  arr: T,
-  optional?: O,
-  nullable?: N,
-): (arg: unknown) => arg is AddNullables<T[number], O, N> {
-  return (arg: unknown): arg is AddNullables<T[number], O, N> => {
-    if (isUndef(arg)) {
-      return !!optional;
-    }
-    if (isNull(arg)) {
-      return !!nullable;
-    }
-    for (const item of arr) {
-      if (arg === item) {
-        return true;
-      }
-    }
-    return false;
-  };
-}
 
-/**
- * Check is value satisfies enum.
- */
-function _isEnumValBase<T, 
-  O extends boolean = boolean,
-  N extends boolean = boolean
->(
-  arg: T,
-  optional?: O,
-  nullable?: N,
-): ((arg: unknown) => arg is AddNullables<T[keyof T], O, N>) {
-  // Check object
-  if (!isBasicObj(arg)) {
-    throw Error('parameter be an non-array object');
-  }
-  // Get keys
-  let resp = Object.keys(arg).reduce((arr: unknown[], key) => {
-    if (!arr.includes(key)) {
-      arr.push(arg[key]);
-    }
-    return arr;
-  }, []);
-  // Check if string or number enum
-  if (isNum(arg[resp[0] as string])) {
-    resp = resp.map(item => arg[item as string]);
-  }
-  // Return validator function
-  return (arg: unknown): arg is AddNullables<T[keyof T], O, N> => {
-    if (isUndef(arg)) {
-      return !!optional;
-    }
-    if (isNull(arg)) {
-      return !!nullable;
-    }
-    return resp.some(val => arg === val);
-  };
-}
 
 /**
  * Extract null/undefined from a validator function.
@@ -325,3 +261,68 @@ function checkType<T>(type: string) {
   };
 }
 
+/**
+ * Is an item in an array.
+ */
+export function _isInArrBase<
+  T extends readonly unknown[],
+  O extends boolean,
+  N extends boolean 
+>(
+  arr: T,
+  optional: O,
+  nullable: N,
+): (arg: unknown) => arg is AddNullables<T[number], O, N> {
+  return (arg: unknown): arg is AddNullables<T[number], O, N> => {
+    if (isUndef(arg)) {
+      return !!optional;
+    }
+    if (isNull(arg)) {
+      return !!nullable;
+    }
+    for (const item of arr) {
+      if (arg === item) {
+        return true;
+      }
+    }
+    return false;
+  };
+}
+
+/**
+ * Check is value satisfies enum.
+ */
+function _isEnumValBase<T, 
+  O extends boolean,
+  N extends boolean
+>(
+  arg: T,
+  optional: O,
+  nullable: N,
+): ((arg: unknown) => arg is AddNullables<T[keyof T], O, N>) {
+  // Check object
+  if (!isBasicObj(arg)) {
+    throw Error('parameter be an non-array object');
+  }
+  // Get keys
+  let resp = Object.keys(arg).reduce((arr: unknown[], key) => {
+    if (!arr.includes(key)) {
+      arr.push(arg[key]);
+    }
+    return arr;
+  }, []);
+  // Check if string or number enum
+  if (isNum(arg[resp[0] as string])) {
+    resp = resp.map(item => arg[item as string]);
+  }
+  // Return validator function
+  return (arg: unknown): arg is AddNullables<T[keyof T], O, N> => {
+    if (isUndef(arg)) {
+      return !!optional;
+    }
+    if (isNull(arg)) {
+      return !!nullable;
+    }
+    return resp.some(val => arg === val);
+  };
+}

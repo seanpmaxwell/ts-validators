@@ -277,6 +277,7 @@ test('test User all default values', () => {
 
   // This will make the type '1' | '2' | '3' instead of just string[]
   const arr = ['1', '2', '3'] as const;
+  // const check = isOptOrInArr(arr)
 
   // Is in Array
   expect(isInArr(arr)('1')).toStrictEqual(true);
