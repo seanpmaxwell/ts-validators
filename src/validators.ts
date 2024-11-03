@@ -50,7 +50,7 @@ export const isOptNumArr = orOpt(isNumArr);
 export const isNulNumArr = orNul(isNumArr);
 export const isNishNumArr = orNul(isOptNumArr);
 
-// Is a number between two ranges
+// Range
 export const isRange = _isRangeBase<false, false, false>(false, false, false);
 export const isOptRange = _isRangeBase<true, false, false>(true, false, false);
 export const isNulRange = _isRangeBase<false, true, false>(false, true, false);
