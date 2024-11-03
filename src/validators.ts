@@ -21,7 +21,7 @@ const EMAIL_RGX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   ALPHA_NUMERIC = new RegExp('^[a-zA-Z0-9]*$');
 
 
-// **** Functions, "Nish" stands for Nullish (null | undefined) **** //
+// **** Functions **** //
 
 // Nullables
 export const isUndef = ((arg: unknown): arg is undefined => arg === undefined);

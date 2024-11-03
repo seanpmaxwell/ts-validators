@@ -8,3 +8,8 @@ This is not a library, this is just a collection of validator functions I freque
 All the validator functions are in the `./src/validators.ts` file.
 <br/>
 
+
+Abbreviations used in naming functions:
+- `Opt` optional, (`value | undefined`)
+- `Nul` nullable, (`value | null`)
+- `Nish` nullish, (`value | null | undefined`)
