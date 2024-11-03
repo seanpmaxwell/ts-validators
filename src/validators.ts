@@ -129,8 +129,8 @@ export const isNulAlphaNumStr = orNul(isAlphaNumStr);
 export const isNishAlphaNumStr = orNul(isOptAlphaNumStr);
 
 // Basic Objects
-export const isBasicObj = (arg: unknown): arg is TBasicObj => (isObj(arg) && 
-  !Array.isArray(arg) && isStrArr(Object.keys(arg)));
+export const isBasicObj = (arg: unknown): arg is TBasicObj => (isObj(arg) && !Array.isArray(arg) && 
+  isStrArr(Object.keys(arg)));
 export const isOptBasicObj = orOpt(isBasicObj);
 export const isNishBasicObj = orNul(isOptBasicObj);
 
