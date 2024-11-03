@@ -169,6 +169,7 @@ test('test User all default values', () => {
   const isValidNums = isNulRangeArr(-1, 10);
   expect(isValidNums([-1, 2, 3])).toStrictEqual(true);
   expect(isValidNums([-1, 11, 3])).toStrictEqual(false);
+  expect(isValidNums([-1, null, 3])).toStrictEqual(false);
   expect(isValidNums(2)).toStrictEqual(false);
   expect(isValidNums(null)).toStrictEqual(true);
 
