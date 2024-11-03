@@ -21,7 +21,7 @@ const EMAIL_RGX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   ALPHA_NUMERIC = new RegExp('^[a-zA-Z0-9]*$');
 
 
-// **** Functions **** //
+// **** Functions, "Nish" stands for Nullish (null | undefined) **** //
 
 // Nullables
 export const isUndef = ((arg: unknown): arg is undefined => arg === undefined);
@@ -32,97 +32,97 @@ export const isNoU = orNul(isUndef);
 export const isBool = checkType<boolean>('boolean');
 export const isOptBool = orOpt(isBool);
 export const isNulBool = orNul(isBool);
-export const isOptNulBool = orNul(isOptBool);
+export const isNishBool = orNul(isOptBool);
 export const isBoolArr = isArr(isBool);
 export const isOptBoolArr = orOpt(isBoolArr);
 export const isNulBoolArr = orNul(isBoolArr);
-export const isOptNulBoolArr = orNul(isOptBoolArr);
+export const isNishBoolArr = orNul(isOptBoolArr);
 
 // Number
 export const isNum = checkType<number>('number');
 export const isOptNum = orOpt(isNum);
 export const isNulNum = orNul(isNum);
-export const isOptNulNum = orNul(isOptNum);
+export const isNishNum = orNul(isOptNum);
 export const isNumArr = isArr(isNum);
 export const isOptNumArr = orOpt(isNumArr);
 export const isNulNumArr = orNul(isNumArr);
-export const isOptNulNumArr = orNul(isOptNumArr);
+export const isNishNumArr = orNul(isOptNumArr);
 
 // String
 export const isStr = checkType<string>('string');
 export const isOptStr = orOpt(isStr);
 export const isNulStr = orNul(isStr);
-export const isOptNulStr = orNul(isOptStr);
+export const isNishStr = orNul(isOptStr);
 export const isStrArr = isArr(isStr);
 export const isOptStrArr = orOpt(isStrArr);
 export const isNulStrArr = orNul(isStrArr);
-export const isOptNulStrArr = orNul(isOptStrArr);
+export const isNishStrArr = orNul(isOptStrArr);
 
 // Date
 export const isDate = (arg: unknown): arg is Date => arg instanceof Date;
 export const isOptDate = orOpt(isDate);
 export const isNulDate = orNul(isDate);
-export const isOptNulDate = orNul(isOptDate);
+export const isNishDate = orNul(isOptDate);
 export const isDateArr = isArr(isDate);
 export const isOptDateArr = orOpt(isDateArr);
 export const isNulDateArr = orNul(isDateArr);
-export const isOptNulDateArr = orNul(isOptDateArr);
+export const isNishDateArr = orNul(isOptDateArr);
 
 // Object
 export const isObj = checkType<object>('object');
 export const isOptObj = orOpt(isObj);
 export const isNulObj = orNul(isObj);
-export const isOptNulObj = orNul(isOptObj);
+export const isNishObj = orNul(isOptObj);
 export const isObjArr = isArr(isObj);
 export const isOptObjArr = orOpt(isObjArr);
 export const isNulObjArr = orNul(isObjArr);
-export const isOptNulObjArr = orNul(isOptObjArr);
+export const isNishObjArr = orNul(isOptObjArr);
 
 // Function
 export const isFn = checkType<TFunc>('function');
 export const isOptFn = orOpt(isFn);
 export const isNulFn = orNul(isFn);
-export const isOptNulFn = orNul(isOptFn);
+export const isNishFn = orNul(isOptFn);
 export const isFnArr = isArr(isFn);
 export const isOptFnArr = orOpt(isFnArr);
 export const isNulFnArr = orNul(isFnArr);
-export const isOptNulFnArr = orNul(isOptFnArr);
+export const isNishFnArr = orNul(isOptFnArr);
 
 // Color
 export const isColor = isRgx<TColor>(COLOR_RGX);
 export const isOptColor = orOpt(isColor);
 export const isNulColor = orNul(isColor);
-export const isOptNulColor = orNul(isOptColor);
+export const isNishColor = orNul(isOptColor);
 
 // Email
 export const isEmail = isRgx<TEmail>(EMAIL_RGX);
 export const isOptEmail = orOpt(isEmail);
 export const isNulEmail = orNul(isEmail);
-export const isOptNulEmail = orNul(isOptEmail);
+export const isNishEmail = orNul(isOptEmail);
 
 // Alpha-Numeric String
 export const isAlphaNumStr = isRgx<string>(ALPHA_NUMERIC);
 export const isOptAlphaNumStr = orOpt(isAlphaNumStr);
 export const isNulAlphaNumStr = orNul(isAlphaNumStr);
-export const isOptNulAlphaNumStr = orNul(isOptAlphaNumStr);
+export const isNishAlphaNumStr = orNul(isOptAlphaNumStr);
 
 // Basic Objects
 export const isBasicObj = (arg: unknown): arg is TBasicObj => (isObj(arg) && 
   !Array.isArray(arg) && isStrArr(Object.keys(arg)));
 export const isOptBasicObj = orOpt(isBasicObj);
-export const isOptNulBasicObj = orNul(isOptBasicObj);
+export const isNishBasicObj = orNul(isOptBasicObj);
 
 // Is in array
 export const isInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, false, false>(arg, false, false);
 export const isOptOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, true, false>(arg, true, false);
 export const isNulOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, false, true>(arg, false, true);
-export const isOptNulOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, true, true>(arg, true, true);
+export const isNishOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, true, true>(arg, true, true);
 
 // Enums
 export const isEnumVal = <T>(arg: T) => _isEnumValBase<T, false, false>(arg, false, false);
 export const isOptEnumVal = <T>(arg: T) => _isEnumValBase<T, true, false>(arg, true, false);
 export const isNulEnumVal = <T>(arg: T) => _isEnumValBase<T, false, true>(arg, false, true);
-export const isOptNulEnumVal = <T>(arg: T) => _isEnumValBase<T, true, true>(arg, true, true);
+export const isNishEnumVal = <T>(arg: T) => _isEnumValBase<T, true, true>(arg, true, true);
 
 
 // **** Misc **** //

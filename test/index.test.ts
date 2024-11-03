@@ -9,72 +9,73 @@ import {
   isBool,
   isOptBool,
   isNulBool,
-  isOptNulBool,
+  isNishBool,
   isBoolArr,
   isOptBoolArr,
-  isOptNulBoolArr,
+  isNishBoolArr,
   isNum,
   isOptNum,
   isNulNum,
-  isOptNulNum,
+  isNishNum,
   isNumArr,
   isOptNumArr,
   isNulNumArr,
-  isOptNulNumArr,
+  isNishNumArr,
   isStr,
   isOptStr,
   isNulStr,
-  isOptNulStr,
+  isNishStr,
   isStrArr,
   isOptStrArr,
   isNulStrArr,
-  isOptNulStrArr,
+  isNishStrArr,
   isDate,
   isOptDate,
   isNulDate,
-  isOptNulDate,
+  isNishDate,
   isDateArr,
   isOptDateArr,
   isNulDateArr,
-  isOptNulDateArr,
+  isNishDateArr,
   isObj,
   isOptObj,
   isNulObj,
-  isOptNulObj,
+  isNishObj,
   isObjArr,
   isOptObjArr,
   isNulObjArr,
-  isOptNulObjArr,
+  isNishObjArr,
   isFnArr,
   isOptFnArr,
-  isOptNulFnArr,
+  isNishFnArr,
   isNulFnArr,
-  isOptNulFn,
+  isNishFn,
   isNulFn,
   isOptFn,
   isFn,
   isColor,
   isOptColor,
   isNulColor,
-  isOptNulColor,
+  isNishColor,
   isEmail,
   isOptEmail,
-  isOptNulEmail,
+  isNishEmail,
   isNulEmail,
   isAlphaNumStr,
   isOptAlphaNumStr,
   isNulAlphaNumStr,
-  isOptNulAlphaNumStr,
+  isNishAlphaNumStr,
   isInArr,
   isOptOrInArr,
   nonNullable,
   isBasicObj,
   checkObjEntries,
   isEnum,
-  isOptNulEnumVal,
+  isNishEnumVal,
   isOptEnumVal,
   isNulEnumVal,
   transform,
+  isNishOrInArr,
 } from '../src/validators';
 
 
@@ -103,9 +104,9 @@ test('test User all default values', () => {
   expect(isOptBool(undefined)).toStrictEqual(true);
   expect(isNulBool(false)).toStrictEqual(true);
   expect(isNulBool(null)).toStrictEqual(true);
-  expect(isOptNulBool(false)).toStrictEqual(true);
-  expect(isOptNulBool(null)).toStrictEqual(true);
-  expect(isOptNulBool(undefined)).toStrictEqual(true);
+  expect(isNishBool(false)).toStrictEqual(true);
+  expect(isNishBool(null)).toStrictEqual(true);
+  expect(isNishBool(undefined)).toStrictEqual(true);
 
   // Boolean Arrays
   expect(isBoolArr([false, true, false])).toStrictEqual(true);
@@ -115,9 +116,9 @@ test('test User all default values', () => {
   expect(isOptBoolArr(undefined)).toStrictEqual(true);
   expect(isNulBoolArr([false, true, false])).toStrictEqual(true);
   expect(isNulBoolArr(null)).toStrictEqual(true);
-  expect(isOptNulBoolArr([false, true, false])).toStrictEqual(true);
-  expect(isOptNulBoolArr(null)).toStrictEqual(true);
-  expect(isOptNulBoolArr(undefined)).toStrictEqual(true);
+  expect(isNishBoolArr([false, true, false])).toStrictEqual(true);
+  expect(isNishBoolArr(null)).toStrictEqual(true);
+  expect(isNishBoolArr(undefined)).toStrictEqual(true);
 
   // Numbers
   expect(isNum(123)).toStrictEqual(true);
@@ -126,9 +127,9 @@ test('test User all default values', () => {
   expect(isOptNum(undefined)).toStrictEqual(true);
   expect(isNulNum(123)).toStrictEqual(true);
   expect(isNulNum(null)).toStrictEqual(true);
-  expect(isOptNulNum(123)).toStrictEqual(true);
-  expect(isOptNulNum(null)).toStrictEqual(true);
-  expect(isOptNulNum(undefined)).toStrictEqual(true);
+  expect(isNishNum(123)).toStrictEqual(true);
+  expect(isNishNum(null)).toStrictEqual(true);
+  expect(isNishNum(undefined)).toStrictEqual(true);
 
   // Number Arrays
   expect(isNumArr([1, 2, 3])).toStrictEqual(true);
@@ -138,9 +139,9 @@ test('test User all default values', () => {
   expect(isOptNumArr(undefined)).toStrictEqual(true);
   expect(isNulNumArr([1, 2, 3])).toStrictEqual(true);
   expect(isNulNumArr(null)).toStrictEqual(true);
-  expect(isOptNulNumArr([1, 2, 3])).toStrictEqual(true);
-  expect(isOptNulNumArr(null)).toStrictEqual(true);
-  expect(isOptNulNumArr(undefined)).toStrictEqual(true);
+  expect(isNishNumArr([1, 2, 3])).toStrictEqual(true);
+  expect(isNishNumArr(null)).toStrictEqual(true);
+  expect(isNishNumArr(undefined)).toStrictEqual(true);
 
   // Strings
   expect(isStr('123')).toStrictEqual(true);
@@ -149,9 +150,9 @@ test('test User all default values', () => {
   expect(isOptStr(undefined)).toStrictEqual(true);
   expect(isNulStr('123')).toStrictEqual(true);
   expect(isNulStr(null)).toStrictEqual(true);
-  expect(isOptNulStr('123')).toStrictEqual(true);
-  expect(isOptNulStr(null)).toStrictEqual(true);
-  expect(isOptNulStr(undefined)).toStrictEqual(true);
+  expect(isNishStr('123')).toStrictEqual(true);
+  expect(isNishStr(null)).toStrictEqual(true);
+  expect(isNishStr(undefined)).toStrictEqual(true);
 
   // String Arrays
   expect(isStrArr(['1', '2', '3'])).toStrictEqual(true);
@@ -161,9 +162,9 @@ test('test User all default values', () => {
   expect(isOptStrArr(undefined)).toStrictEqual(true);
   expect(isNulStrArr(['1', '2', '3'])).toStrictEqual(true);
   expect(isNulStrArr(null)).toStrictEqual(true);
-  expect(isOptNulStrArr(['1', '2', '3'])).toStrictEqual(true);
-  expect(isOptNulStrArr(null)).toStrictEqual(true);
-  expect(isOptNulStrArr(undefined)).toStrictEqual(true);
+  expect(isNishStrArr(['1', '2', '3'])).toStrictEqual(true);
+  expect(isNishStrArr(null)).toStrictEqual(true);
+  expect(isNishStrArr(undefined)).toStrictEqual(true);
 
   // Date
   const D1 = new Date();
@@ -173,9 +174,9 @@ test('test User all default values', () => {
   expect(isOptDate(undefined)).toStrictEqual(true);
   expect(isNulDate(D1)).toStrictEqual(true);
   expect(isNulDate(null)).toStrictEqual(true);
-  expect(isOptNulDate(D1)).toStrictEqual(true);
-  expect(isOptNulDate(null)).toStrictEqual(true);
-  expect(isOptNulDate(undefined)).toStrictEqual(true);
+  expect(isNishDate(D1)).toStrictEqual(true);
+  expect(isNishDate(null)).toStrictEqual(true);
+  expect(isNishDate(undefined)).toStrictEqual(true);
 
   // Date Arrays
   const D2 = new Date(), D3 = new Date();
@@ -186,9 +187,9 @@ test('test User all default values', () => {
   expect(isOptDateArr(undefined)).toStrictEqual(true);
   expect(isNulDateArr([D1, D2, D3])).toStrictEqual(true);
   expect(isNulDateArr(null)).toStrictEqual(true);
-  expect(isOptNulDateArr([D1, D2, D3])).toStrictEqual(true);
-  expect(isOptNulDateArr(null)).toStrictEqual(true);
-  expect(isOptNulDateArr(undefined)).toStrictEqual(true);
+  expect(isNishDateArr([D1, D2, D3])).toStrictEqual(true);
+  expect(isNishDateArr(null)).toStrictEqual(true);
+  expect(isNishDateArr(undefined)).toStrictEqual(true);
 
   // Obj
   const O1 = { val: 1 };
@@ -198,9 +199,9 @@ test('test User all default values', () => {
   expect(isOptObj(undefined)).toStrictEqual(true);
   expect(isNulObj(O1)).toStrictEqual(true);
   expect(isNulObj(null)).toStrictEqual(true);
-  expect(isOptNulObj(O1)).toStrictEqual(true);
-  expect(isOptNulObj(null)).toStrictEqual(true);
-  expect(isOptNulObj(undefined)).toStrictEqual(true);
+  expect(isNishObj(O1)).toStrictEqual(true);
+  expect(isNishObj(null)).toStrictEqual(true);
+  expect(isNishObj(undefined)).toStrictEqual(true);
 
   // Obj Arrays
   const O2 = { val: 2 }, O3 = { val: 3 };
@@ -211,9 +212,9 @@ test('test User all default values', () => {
   expect(isOptObjArr(undefined)).toStrictEqual(true);
   expect(isNulObjArr([O1, O2, O3])).toStrictEqual(true);
   expect(isNulObjArr(null)).toStrictEqual(true);
-  expect(isOptNulObjArr([O1, O2, O3])).toStrictEqual(true);
-  expect(isOptNulObjArr(null)).toStrictEqual(true);
-  expect(isOptNulObjArr(undefined)).toStrictEqual(true);
+  expect(isNishObjArr([O1, O2, O3])).toStrictEqual(true);
+  expect(isNishObjArr(null)).toStrictEqual(true);
+  expect(isNishObjArr(undefined)).toStrictEqual(true);
 
   // Functions
   const F1 = () => 1;
@@ -223,9 +224,9 @@ test('test User all default values', () => {
   expect(isOptFn(undefined)).toStrictEqual(true);
   expect(isNulFn(F1)).toStrictEqual(true);
   expect(isNulFn(null)).toStrictEqual(true);
-  expect(isOptNulFn(F1)).toStrictEqual(true);
-  expect(isOptNulFn(null)).toStrictEqual(true);
-  expect(isOptNulFn(undefined)).toStrictEqual(true);
+  expect(isNishFn(F1)).toStrictEqual(true);
+  expect(isNishFn(null)).toStrictEqual(true);
+  expect(isNishFn(undefined)).toStrictEqual(true);
 
   // Function Arrays
   const F2 = () => 2, F3 = () => 3;
@@ -236,9 +237,9 @@ test('test User all default values', () => {
   expect(isOptFnArr(undefined)).toStrictEqual(true);
   expect(isNulFnArr([F1, F2, F3])).toStrictEqual(true);
   expect(isNulFnArr(null)).toStrictEqual(true);
-  expect(isOptNulFnArr([F1, F2, F3])).toStrictEqual(true);
-  expect(isOptNulFnArr(null)).toStrictEqual(true);
-  expect(isOptNulFnArr(undefined)).toStrictEqual(true);
+  expect(isNishFnArr([F1, F2, F3])).toStrictEqual(true);
+  expect(isNishFnArr(null)).toStrictEqual(true);
+  expect(isNishFnArr(undefined)).toStrictEqual(true);
 
   // Color
   expect(isColor('#ffffff')).toStrictEqual(true);
@@ -248,9 +249,9 @@ test('test User all default values', () => {
   expect(isNulColor('#ffffff')).toStrictEqual(true);
   expect(isNulColor(null)).toStrictEqual(true);
   expect(isOptColor('#ffffff')).toStrictEqual(true);
-  expect(isOptNulColor(undefined)).toStrictEqual(true);
-  expect(isOptNulColor(null)).toStrictEqual(true);
-  expect(isOptNulColor(undefined)).toStrictEqual(true);
+  expect(isNishColor(undefined)).toStrictEqual(true);
+  expect(isNishColor(null)).toStrictEqual(true);
+  expect(isNishColor(undefined)).toStrictEqual(true);
 
   // Email
   expect(isEmail('a@a.com')).toStrictEqual(true);
@@ -260,9 +261,9 @@ test('test User all default values', () => {
   expect(isNulEmail('a@a.com')).toStrictEqual(true);
   expect(isNulEmail(null)).toStrictEqual(true);
   expect(isOptEmail('a@a.com')).toStrictEqual(true);
-  expect(isOptNulEmail(undefined)).toStrictEqual(true);
-  expect(isOptNulEmail(null)).toStrictEqual(true);
-  expect(isOptNulEmail(undefined)).toStrictEqual(true);
+  expect(isNishEmail(undefined)).toStrictEqual(true);
+  expect(isNishEmail(null)).toStrictEqual(true);
+  expect(isNishEmail(undefined)).toStrictEqual(true);
 
   // Is Alpha-Numeric String
   expect(isAlphaNumStr('asdf1234')).toStrictEqual(true);
@@ -272,9 +273,9 @@ test('test User all default values', () => {
   expect(isNulAlphaNumStr('asdf1234')).toStrictEqual(true);
   expect(isNulAlphaNumStr(null)).toStrictEqual(true);
   expect(isOptAlphaNumStr('asdf1234')).toStrictEqual(true);
-  expect(isOptNulAlphaNumStr(undefined)).toStrictEqual(true);
-  expect(isOptNulAlphaNumStr(null)).toStrictEqual(true);
-  expect(isOptNulAlphaNumStr(undefined)).toStrictEqual(true);
+  expect(isNishAlphaNumStr(undefined)).toStrictEqual(true);
+  expect(isNishAlphaNumStr(null)).toStrictEqual(true);
+  expect(isNishAlphaNumStr(undefined)).toStrictEqual(true);
 
   // This will make the type '1' | '2' | '3' instead of just string[]
   const arr = ['1', '2', '3'] as const;
@@ -285,6 +286,7 @@ test('test User all default values', () => {
   expect(isInArr(arr)(1)).toStrictEqual(false);
   expect(isOptOrInArr(arr)('1')).toStrictEqual(true);
   expect(isOptOrInArr(arr)(undefined)).toStrictEqual(true);
+  expect(isNishOrInArr(arr)(undefined)).toStrictEqual(true);
   
   // Enums
   expect(isEnumVal(Scopes)('public')).toStrictEqual(true);
@@ -294,8 +296,8 @@ test('test User all default values', () => {
   expect(isEnum(ScopesAlt)).toStrictEqual(true);
   expect(isOptEnumVal(ScopesAlt)(undefined)).toStrictEqual(true);
   expect(isNulEnumVal(ScopesAlt)(null)).toStrictEqual(true);
-  expect(isOptNulEnumVal(ScopesAlt)(null)).toStrictEqual(true);
-  expect(isOptNulEnumVal(ScopesAlt)(1)).toStrictEqual(true);
+  expect(isNishEnumVal(ScopesAlt)(null)).toStrictEqual(true);
+  expect(isNishEnumVal(ScopesAlt)(1)).toStrictEqual(true);
 
   // Non-Nullable
   expect(nonNullable(isNulStr)('asdf')).toStrictEqual(true);
