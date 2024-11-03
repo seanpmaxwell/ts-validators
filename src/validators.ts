@@ -55,10 +55,10 @@ export const isRange = _isRangeBase<false, false, false>(false, false, false);
 export const isOptRange = _isRangeBase<true, false, false>(true, false, false);
 export const isNulRange = _isRangeBase<false, true, false>(false, true, false);
 export const isNishRange = _isRangeBase<true, true, false>(true, true, false);
-export const isRangeArr = _isRangeBase<false, false, false>(false, false, true);
-export const isOptRangeArr = _isRangeBase<true, false, false>(true, false, true);
-export const isNulRangeArr = _isRangeBase<false, true, false>(false, true, true);
-export const isNishRangeArr = _isRangeBase<true, true, false>(true, true, true);
+export const isRangeArr = _isRangeBase<false, false, true>(false, false, true);
+export const isOptRangeArr = _isRangeBase<true, false, true>(true, false, true);
+export const isNulRangeArr = _isRangeBase<false, true, true>(false, true, true);
+export const isNishRangeArr = _isRangeBase<true, true, true>(true, true, true);
 
 // String
 export const isStr = checkType<string>('string');
