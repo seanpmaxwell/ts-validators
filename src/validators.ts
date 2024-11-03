@@ -395,10 +395,10 @@ function _isRangeCore(arg: unknown, min: number | null, max: number | null) {
   if (!isNum(arg)) {
     return false;
   }
-  if (min !== null && arg <= min) {
+  if (min !== null && arg < min) {
     return false;
   }
-  if (max !== null && arg >= max) {
+  if (max !== null && arg > max) {
     return false;
   }
   return true;

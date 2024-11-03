@@ -83,6 +83,7 @@ import {
   isRange,
   isNishRange,
   isOptRange,
+  isNulRangeArr,
 } from '../src/validators';
 
 
@@ -165,6 +166,11 @@ test('test User all default values', () => {
   expect(isNeg(.01)).toStrictEqual(false);
   expect(isNeg(undefined)).toStrictEqual(true);
   expect(isNeg(null)).toStrictEqual(false);
+  const isValidNums = isNulRangeArr(-1, 10);
+  expect(isValidNums([-1, 2, 3])).toStrictEqual(true);
+  expect(isValidNums([-1, 11, 3])).toStrictEqual(false);
+  expect(isValidNums(2)).toStrictEqual(false);
+  expect(isValidNums(null)).toStrictEqual(true);
 
   // Strings
   expect(isStr('123')).toStrictEqual(true);
@@ -358,8 +364,4 @@ test('test User all default values', () => {
   expect(isNumArrWithParse('[1,2,3]', val => {
     expect(isNumArr(val)).toStrictEqual(true);
   })).toStrictEqual(true);
-
-  // Check Non-Empty string
-
-
 });
