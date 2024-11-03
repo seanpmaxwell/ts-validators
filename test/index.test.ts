@@ -76,6 +76,13 @@ import {
   isNulEnumVal,
   transform,
   isNishOrInArr,
+  isNeStr,
+  isOptNeStr,
+  isNulNeStr,
+  isNishNeStr,
+  isRange,
+  isNishRange,
+  isOptRange,
 } from '../src/validators';
 
 
@@ -143,6 +150,22 @@ test('test User all default values', () => {
   expect(isNishNumArr(null)).toStrictEqual(true);
   expect(isNishNumArr(undefined)).toStrictEqual(true);
 
+  // Ranges
+  const isValidAge = isRange(18, 130);
+  expect(isValidAge(123)).toStrictEqual(true);
+  expect(isValidAge(5)).toStrictEqual(false);
+  expect(isValidAge(150)).toStrictEqual(false);
+  const isPos = isNishRange(0, null);
+  expect(isPos(1_000_000)).toStrictEqual(true);
+  expect(isPos(-1)).toStrictEqual(false);
+  expect(isPos(undefined)).toStrictEqual(true);
+  expect(isPos(null)).toStrictEqual(true);
+  const isNeg = isOptRange(null, -.000001);
+  expect(isNeg(-1_000_000)).toStrictEqual(true);
+  expect(isNeg(.01)).toStrictEqual(false);
+  expect(isNeg(undefined)).toStrictEqual(true);
+  expect(isNeg(null)).toStrictEqual(false);
+
   // Strings
   expect(isStr('123')).toStrictEqual(true);
   expect(isStr(false)).toStrictEqual(false);
@@ -153,6 +176,18 @@ test('test User all default values', () => {
   expect(isNishStr('123')).toStrictEqual(true);
   expect(isNishStr(null)).toStrictEqual(true);
   expect(isNishStr(undefined)).toStrictEqual(true);
+
+  // Non-Empty Strings
+  expect(isNeStr('123')).toStrictEqual(true);
+  expect(isNeStr('')).toStrictEqual(false);
+  expect(isOptNeStr('123')).toStrictEqual(true);
+  expect(isOptNeStr(undefined)).toStrictEqual(true);
+  expect(isNulNeStr('123')).toStrictEqual(true);
+  expect(isNulNeStr(null)).toStrictEqual(true);
+  expect(isNishNeStr('123')).toStrictEqual(true);
+  expect(isNishNeStr('')).toStrictEqual(false);
+  expect(isNishNeStr(null)).toStrictEqual(true);
+  expect(isNishNeStr(undefined)).toStrictEqual(true);
 
   // String Arrays
   expect(isStrArr(['1', '2', '3'])).toStrictEqual(true);
@@ -323,4 +358,8 @@ test('test User all default values', () => {
   expect(isNumArrWithParse('[1,2,3]', val => {
     expect(isNumArr(val)).toStrictEqual(true);
   })).toStrictEqual(true);
+
+  // Check Non-Empty string
+
+
 });

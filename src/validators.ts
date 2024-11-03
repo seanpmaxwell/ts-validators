@@ -7,11 +7,13 @@ export type TEnum = Record<string, string | number>;
 export type TEmail = `${string}@${string}`;
 export type TColor = `#${string}`;
 export type TBasicObj = Record<string, unknown>;
+export type TValidateWithTransform<T> = (arg: unknown, cb?: (arg: T) => void) => arg is T;
 
 // Add nullables
 type AddNull<T, N> = (N extends true ? T | null : T);
 type AddNullables<T, O, N> = (O extends true ? AddNull<T, N> | undefined  : AddNull<T, N>);
-type TValidateWithTransform<T> = (arg: unknown, cb?: (arg: T) => void) => arg is T;
+type AddMods<T, O, N, A> = A extends true ? AddNullables<T[], O, N> : AddNullables<T, O, N>;
+
 
 
 // **** Variables **** //
@@ -48,6 +50,16 @@ export const isOptNumArr = orOpt(isNumArr);
 export const isNulNumArr = orNul(isNumArr);
 export const isNishNumArr = orNul(isOptNumArr);
 
+// Is a number between two ranges
+export const isRange = _isRangeBase<false, false, false>(false, false, false);
+export const isOptRange = _isRangeBase<true, false, false>(true, false, false);
+export const isNulRange = _isRangeBase<false, true, false>(false, true, false);
+export const isNishRange = _isRangeBase<true, true, false>(true, true, false);
+export const isRangeArr = _isRangeBase<false, false, false>(false, false, true);
+export const isOptRangeArr = _isRangeBase<true, false, false>(true, false, true);
+export const isNulRangeArr = _isRangeBase<false, true, false>(false, true, true);
+export const isNishRangeArr = _isRangeBase<true, true, false>(true, true, true);
+
 // String
 export const isStr = checkType<string>('string');
 export const isOptStr = orOpt(isStr);
@@ -57,6 +69,16 @@ export const isStrArr = isArr(isStr);
 export const isOptStrArr = orOpt(isStrArr);
 export const isNulStrArr = orNul(isStrArr);
 export const isNishStrArr = orNul(isOptStrArr);
+
+// NeStr => "Non-Empty String"
+export const isNeStr = (arg: unknown): arg is string => (isStr(arg) && arg.length > 0);
+export const isOptNeStr = orOpt(isNeStr);
+export const isNulNeStr = orNul(isNeStr);
+export const isNishNeStr = orNul(isOptNeStr);
+export const isNeStrArr = isArr(isNeStr);
+export const isOptNeStrArr = orOpt(isNeStrArr);
+export const isNulNeStrArr = orNul(isNeStrArr);
+export const isNishNeStrArr = orNul(isOptNeStrArr);
 
 // Date
 export const isDate = (arg: unknown): arg is Date => arg instanceof Date;
@@ -335,4 +357,49 @@ function _isEnumValBase<T,
     }
     return resp.some(val => arg === val);
   };
+}
+
+/**
+ * Determines if number is between two ranges. If you want to leave off a range, 
+ * just use null. (0, null) => "0 or any positive number"
+ */
+function _isRangeBase<
+  O extends boolean,
+  N extends boolean,
+  A extends boolean,
+  >(
+  optional: boolean,
+  nullable: boolean,
+  isArr: boolean,
+): (min: number | null, max: number | null) => ((arg: unknown) => arg is AddMods<number, O, N, A>) {
+  return (min: number | null, max: number | null): ((arg: unknown) => arg is AddMods<number, O, N, A>) => {
+    return (arg: unknown): arg is AddMods<number, O, N, A> => {
+      if (arg === undefined) {
+        return optional;
+      }
+      if (arg === null) {
+        return nullable;
+      }
+      if (isArr) {
+        return Array.isArray(arg) && !arg.some(item => !_isRangeCore(item, min, max));
+      }
+      return _isRangeCore(arg, min, max);
+    };
+  };
+}
+
+/**
+ * Core logic for is array function.
+ */
+function _isRangeCore(arg: unknown, min: number | null, max: number | null) {
+  if (!isNum(arg)) {
+    return false;
+  }
+  if (min !== null && arg <= min) {
+    return false;
+  }
+  if (max !== null && arg >= max) {
+    return false;
+  }
+  return true;
 }
