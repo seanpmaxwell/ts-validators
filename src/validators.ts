@@ -146,6 +146,16 @@ export const isOptEnumVal = <T>(arg: T) => _isEnumValBase<T, true, false>(arg, t
 export const isNulEnumVal = <T>(arg: T) => _isEnumValBase<T, false, true>(arg, false, true);
 export const isNishEnumVal = <T>(arg: T) => _isEnumValBase<T, true, true>(arg, true, true);
 
+// Is Key of an Object
+export const isKeyOf = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, false, false, false>(arg, false, false, false);
+export const isOptKeyOf = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, true, false, false>(arg, true, false, false);
+export const isNulKeyOf = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, false, true, false>(arg, false, true, false);
+export const isNishKeyOf = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, true, true, false>(arg, true, true, false);
+export const isKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, false, false, true>(arg, false, false, true);
+export const isOptKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, true, false, true>(arg, true, false, true);
+export const isNulKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, false, true, true>(arg, false, true, true);
+export const isNishKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, true, true, true>(arg, true, true, true);
+
 
 // **** Misc **** //
 
@@ -328,24 +338,24 @@ function _isEnumValBase<T,
   O extends boolean,
   N extends boolean
 >(
-  arg: T,
+  enumArg: T,
   optional: O,
   nullable: N,
 ): ((arg: unknown) => arg is AddNullables<T[keyof T], O, N>) {
-  // Check object
-  if (!isBasicObj(arg)) {
-    throw Error('parameter be an non-array object');
+  // Check is enum
+  if (!isEnum(enumArg)) {
+    throw Error('Item to check from must be an enum.');
   }
   // Get keys
-  let resp = Object.keys(arg).reduce((arr: unknown[], key) => {
+  let resp = Object.keys(enumArg).reduce((arr: unknown[], key) => {
     if (!arr.includes(key)) {
-      arr.push(arg[key]);
+      arr.push(enumArg[key]);
     }
     return arr;
   }, []);
   // Check if string or number enum
-  if (isNum(arg[resp[0] as string])) {
-    resp = resp.map(item => arg[item as string]);
+  if (isNum(enumArg[resp[0] as string])) {
+    resp = resp.map(item => enumArg[item as string]);
   }
   // Return validator function
   return (arg: unknown): arg is AddNullables<T[keyof T], O, N> => {
@@ -367,13 +377,14 @@ function _isRangeBase<
   O extends boolean,
   N extends boolean,
   A extends boolean,
-  >(
+  Ret = AddMods<number, O, N, A>,
+>(
   optional: boolean,
   nullable: boolean,
   isArr: boolean,
-): (min: number | null, max: number | null) => ((arg: unknown) => arg is AddMods<number, O, N, A>) {
-  return (min: number | null, max: number | null): ((arg: unknown) => arg is AddMods<number, O, N, A>) => {
-    return (arg: unknown): arg is AddMods<number, O, N, A> => {
+): (min: number | null, max: number | null) => ((arg: unknown) => arg is Ret) {
+  return (min: number | null, max: number | null): ((arg: unknown) => arg is Ret) => {
+    return (arg: unknown): arg is Ret => {
       if (arg === undefined) {
         return optional;
       }
@@ -402,4 +413,37 @@ function _isRangeCore(arg: unknown, min: number | null, max: number | null) {
     return false;
   }
   return true;
+}
+
+/**
+ * See if something is a key of an object.
+ */
+function _isKeyOfBase<
+  T extends Record<string, unknown>,
+  O extends boolean,
+  N extends boolean,
+  A extends boolean,
+  Ret = AddMods<keyof T, O, N, A>,
+>(
+  obj: Record<string, unknown>,
+  optional: boolean,
+  nullable: boolean,
+  isArr: boolean,
+): ((arg: unknown) => arg is Ret) {
+  if (!isBasicObj(obj)) {
+    throw new Error('Item to check from must be a Record<string, unknown>');
+  }
+  const isInKeys = isInArr(Object.keys(obj));
+  return (arg: unknown): arg is Ret => {
+    if (arg === undefined) {
+      return optional;
+    }
+    if (arg === null) {
+      return nullable;
+    }
+    if (isArr) {
+      return Array.isArray(arg) && !arg.some(item => !isInKeys(item));
+    }
+    return isInKeys(arg);
+  };
 }

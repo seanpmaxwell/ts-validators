@@ -84,6 +84,8 @@ import {
   isNishRange,
   isOptRange,
   isNulRangeArr,
+  isKeyOf,
+  isNulKeyOfArr,
 } from '../src/validators';
 
 
@@ -365,4 +367,19 @@ test('test User all default values', () => {
   expect(isNumArrWithParse('[1,2,3]', val => {
     expect(isNumArr(val)).toStrictEqual(true);
   })).toStrictEqual(true);
+
+  // Check is key of Object
+  const someObject = {
+    foo: 'bar',
+    bada: 'bing',
+  } as const;
+
+  const isKeyofSomeObject = isKeyOf(someObject);
+  expect(isKeyofSomeObject('foo')).toStrictEqual(true);
+  expect(isKeyofSomeObject('bada')).toStrictEqual(true);
+  expect(isKeyofSomeObject('bing')).toStrictEqual(false);
+  const isKeyofSomeObjectArr = isNulKeyOfArr(someObject);
+  expect(isKeyofSomeObjectArr(['bada', 'foo'])).toStrictEqual(true);
+  expect(isKeyofSomeObjectArr(null)).toStrictEqual(true);
+  expect(isKeyofSomeObjectArr(['bar', 'foo', 'bing'])).toStrictEqual(false);
 });
