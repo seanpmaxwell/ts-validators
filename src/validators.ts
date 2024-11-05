@@ -1,24 +1,20 @@
 /* eslint-disable max-len */
+
+
 // **** Types **** //
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type TFunc = (...args: any[]) => any;
 export type TEnum = Record<string, string | number>;
 export type TEmail = `${string}@${string}`;
 export type TColor = `#${string}`;
-export type TBasicObj = Record<string, unknown>;
-export type TValidateWithTransform<T> = (arg: unknown, cb?: (arg: T) => void) => arg is T;
 
-// Add nullables
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type TFunc = (...args: any[]) => any;
+export type TBasicObj = Record<string, unknown>;
+
+// Add modifiers
 type AddNull<T, N> = (N extends true ? T | null : T);
 type AddNullables<T, O, N> = (O extends true ? AddNull<T, N> | undefined  : AddNull<T, N>);
-type AddMods<T, O, N, A> = A extends true ? AddNullables<T[], O, N> : AddNullables<T, O, N>;
-
-// Get response type for pull function
-type TInferPullRes<U> = {
-  [K in keyof U]: U[K] extends TValidateWithTransform<infer X> ? X : never;
-};
-
+export type AddMods<T, O, N, A> = A extends true ? AddNullables<T[], O, N> : AddNullables<T, O, N>;
 
 
 // **** Variables **** //
@@ -33,27 +29,27 @@ const EMAIL_RGX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
 // Nullables
 export const isUndef = ((arg: unknown): arg is undefined => arg === undefined);
 export const isNull = ((arg: unknown): arg is null => arg === null);
-export const isNoU = orNul(isUndef);
+export const isNoU = _orNul(isUndef);
 
 // Boolean
-export const isBool = checkType<boolean>('boolean');
-export const isOptBool = orOpt(isBool);
-export const isNulBool = orNul(isBool);
-export const isNishBool = orNul(isOptBool);
-export const isBoolArr = isArr(isBool);
-export const isOptBoolArr = orOpt(isBoolArr);
-export const isNulBoolArr = orNul(isBoolArr);
-export const isNishBoolArr = orNul(isOptBoolArr);
+export const isBool = _checkType<boolean>('boolean');
+export const isOptBool = _orOpt(isBool);
+export const isNulBool = _orNul(isBool);
+export const isNishBool = _orNul(isOptBool);
+export const isBoolArr = _isArr(isBool);
+export const isOptBoolArr = _orOpt(isBoolArr);
+export const isNulBoolArr = _orNul(isBoolArr);
+export const isNishBoolArr = _orNul(isOptBoolArr);
 
 // Number
-export const isNum = checkType<number>('number');
-export const isOptNum = orOpt(isNum);
-export const isNulNum = orNul(isNum);
-export const isNishNum = orNul(isOptNum);
-export const isNumArr = isArr(isNum);
-export const isOptNumArr = orOpt(isNumArr);
-export const isNulNumArr = orNul(isNumArr);
-export const isNishNumArr = orNul(isOptNumArr);
+export const isNum = _checkType<number>('number');
+export const isOptNum = _orOpt(isNum);
+export const isNulNum = _orNul(isNum);
+export const isNishNum = _orNul(isOptNum);
+export const isNumArr = _isArr(isNum);
+export const isOptNumArr = _orOpt(isNumArr);
+export const isNulNumArr = _orNul(isNumArr);
+export const isNishNumArr = _orNul(isOptNumArr);
 
 // Range
 export const isRange = _isRangeBase<false, false, false>(false, false, false);
@@ -66,78 +62,77 @@ export const isNulRangeArr = _isRangeBase<false, true, true>(false, true, true);
 export const isNishRangeArr = _isRangeBase<true, true, true>(true, true, true);
 
 // String
-export const isStr = checkType<string>('string');
-export const isOptStr = orOpt(isStr);
-export const isNulStr = orNul(isStr);
-export const isNishStr = orNul(isOptStr);
-export const isStrArr = isArr(isStr);
-export const isOptStrArr = orOpt(isStrArr);
-export const isNulStrArr = orNul(isStrArr);
-export const isNishStrArr = orNul(isOptStrArr);
+export const isStr = _checkType<string>('string');
+export const isOptStr = _orOpt(isStr);
+export const isNulStr = _orNul(isStr);
+export const isNishStr = _orNul(isOptStr);
+export const isStrArr = _isArr(isStr);
+export const isOptStrArr = _orOpt(isStrArr);
+export const isNulStrArr = _orNul(isStrArr);
+export const isNishStrArr = _orNul(isOptStrArr);
 
 // NeStr => "Non-Empty String"
 export const isNeStr = (arg: unknown): arg is string => (isStr(arg) && arg.length > 0);
-export const isOptNeStr = orOpt(isNeStr);
-export const isNulNeStr = orNul(isNeStr);
-export const isNishNeStr = orNul(isOptNeStr);
-export const isNeStrArr = isArr(isNeStr);
-export const isOptNeStrArr = orOpt(isNeStrArr);
-export const isNulNeStrArr = orNul(isNeStrArr);
-export const isNishNeStrArr = orNul(isOptNeStrArr);
+export const isOptNeStr = _orOpt(isNeStr);
+export const isNulNeStr = _orNul(isNeStr);
+export const isNishNeStr = _orNul(isOptNeStr);
+export const isNeStrArr = _isArr(isNeStr);
+export const isOptNeStrArr = _orOpt(isNeStrArr);
+export const isNulNeStrArr = _orNul(isNeStrArr);
+export const isNishNeStrArr = _orNul(isOptNeStrArr);
 
 // Date
 export const isDate = (arg: unknown): arg is Date => arg instanceof Date;
-export const isOptDate = orOpt(isDate);
-export const isNulDate = orNul(isDate);
-export const isNishDate = orNul(isOptDate);
-export const isDateArr = isArr(isDate);
-export const isOptDateArr = orOpt(isDateArr);
-export const isNulDateArr = orNul(isDateArr);
-export const isNishDateArr = orNul(isOptDateArr);
+export const isOptDate = _orOpt(isDate);
+export const isNulDate = _orNul(isDate);
+export const isNishDate = _orNul(isOptDate);
+export const isDateArr = _isArr(isDate);
+export const isOptDateArr = _orOpt(isDateArr);
+export const isNulDateArr = _orNul(isDateArr);
+export const isNishDateArr = _orNul(isOptDateArr);
 
 // Object
-export const isObj = checkType<object>('object');
-export const isOptObj = orOpt(isObj);
-export const isNulObj = orNul(isObj);
-export const isNishObj = orNul(isOptObj);
-export const isObjArr = isArr(isObj);
-export const isOptObjArr = orOpt(isObjArr);
-export const isNulObjArr = orNul(isObjArr);
-export const isNishObjArr = orNul(isOptObjArr);
+export const isObj = _checkType<object>('object');
+export const isOptObj = _orOpt(isObj);
+export const isNulObj = _orNul(isObj);
+export const isNishObj = _orNul(isOptObj);
+export const isObjArr = _isArr(isObj);
+export const isOptObjArr = _orOpt(isObjArr);
+export const isNulObjArr = _orNul(isObjArr);
+export const isNishObjArr = _orNul(isOptObjArr);
 
 // Function
-export const isFn = checkType<TFunc>('function');
-export const isOptFn = orOpt(isFn);
-export const isNulFn = orNul(isFn);
-export const isNishFn = orNul(isOptFn);
-export const isFnArr = isArr(isFn);
-export const isOptFnArr = orOpt(isFnArr);
-export const isNulFnArr = orNul(isFnArr);
-export const isNishFnArr = orNul(isOptFnArr);
+export const isFn = _checkType<TFunc>('function');
+export const isOptFn = _orOpt(isFn);
+export const isNulFn = _orNul(isFn);
+export const isNishFn = _orNul(isOptFn);
+export const isFnArr = _isArr(isFn);
+export const isOptFnArr = _orOpt(isFnArr);
+export const isNulFnArr = _orNul(isFnArr);
+export const isNishFnArr = _orNul(isOptFnArr);
 
 // Color
-export const isColor = isRgx<TColor>(COLOR_RGX);
-export const isOptColor = orOpt(isColor);
-export const isNulColor = orNul(isColor);
-export const isNishColor = orNul(isOptColor);
+export const isColor = _isRgx<TColor>(COLOR_RGX);
+export const isOptColor = _orOpt(isColor);
+export const isNulColor = _orNul(isColor);
+export const isNishColor = _orNul(isOptColor);
 
 // Email
-export const isEmail = isRgx<TEmail>(EMAIL_RGX);
-export const isOptEmail = orOpt(isEmail);
-export const isNulEmail = orNul(isEmail);
-export const isNishEmail = orNul(isOptEmail);
+export const isEmail = _isRgx<TEmail>(EMAIL_RGX);
+export const isOptEmail = _orOpt(isEmail);
+export const isNulEmail = _orNul(isEmail);
+export const isNishEmail = _orNul(isOptEmail);
 
 // Alpha-Numeric String
-export const isAlphaNumStr = isRgx<string>(ALPHA_NUMERIC);
-export const isOptAlphaNumStr = orOpt(isAlphaNumStr);
-export const isNulAlphaNumStr = orNul(isAlphaNumStr);
-export const isNishAlphaNumStr = orNul(isOptAlphaNumStr);
+export const isAlphaNumStr = _isRgx<string>(ALPHA_NUMERIC);
+export const isOptAlphaNumStr = _orOpt(isAlphaNumStr);
+export const isNulAlphaNumStr = _orNul(isAlphaNumStr);
+export const isNishAlphaNumStr = _orNul(isOptAlphaNumStr);
 
 // Basic Objects
-export const isBasicObj = (arg: unknown): arg is TBasicObj => (isObj(arg) && !Array.isArray(arg) && 
-  isStrArr(Object.keys(arg)));
-export const isOptBasicObj = orOpt(isBasicObj);
-export const isNishBasicObj = orNul(isOptBasicObj);
+export const isBasicObj = (arg: unknown): arg is TBasicObj => (isObj(arg) && !Array.isArray(arg) && isStrArr(Object.keys(arg)));
+export const isOptBasicObj = _orOpt(isBasicObj);
+export const isNishBasicObj = _orNul(isOptBasicObj);
 
 // Is in array
 export const isInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, false, false>(arg, false, false);
@@ -160,6 +155,17 @@ export const isKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, false
 export const isOptKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, true, false, true>(arg, true, false, true);
 export const isNulKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, false, true, true>(arg, false, true, true);
 export const isNishKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, true, true, true>(arg, true, true, true);
+
+// Parse will make sure an object matches the schema, if it does not pass, then 'undefined' 
+// will be returned and the .error function will fire (if you supplied one).
+export const parse = _parseBase<false, false, false>(false, false, false);
+export const optParse = _parseBase<true, false, false>(true, false, false);
+export const nulParse = _parseBase<false, true, false>(false, true, false);
+export const nishParse = _parseBase<true, true, false>(true, true, false);
+export const parseArr = _parseBase<false, false, true>(false, false, true);
+export const optParseArr = _parseBase<true, false, true>(true, false, true);
+export const nulParseArr = _parseBase<false, true, true>(false, true, true);
+export const nishParseArr = _parseBase<true, true, true>(true, true, true);
 
 
 // **** Misc **** //
@@ -231,55 +237,13 @@ export function isEnum(arg: unknown): arg is TEnum {
   return true;
 }
 
-/**
- * Transform a value before checking it.
- */
-export function transform<T>(
-  transFn: TFunc,
-  vldt: ((arg: unknown) => arg is T),
-): TValidateWithTransform<T> {
-  return (arg: unknown, cb?: (arg: T) => void): arg is T => {
-    if (arg !== undefined) {
-      arg = transFn(arg);
-    }
-    cb?.(arg as T);
-    return vldt(arg);
-  };
-}
-
-/**
- * Iterate an object, apply a validator function to to each property in an 
- * object using the schema. If the schema validation fails, return null. You
- * can also pass an optional callback method that will fire on failure.
- */
-export function pull<U extends Record<string, TValidateWithTransform<unknown>>>(
-  schema: U,
-  arg: unknown,
-  onError?: (property: string, value: unknown) => void,
-): TInferPullRes<U> | null {
-  if (!isObj(arg)) {
-    return null;
-  }
-  const retVal: TBasicObj = {};
-  for (const key in schema) {
-    const testFn = schema[key];
-    let val = (arg as TBasicObj)[key];
-    if (!testFn(val, tval => val = tval)) {
-      onError?.(key, val);
-      return null;
-    };
-    retVal[key] = val;
-  }
-  return retVal as (TInferPullRes<U> | null);
-}
-
 
 // **** Wrapper Functions **** //
 
 /**
  * Allow param to be undefined
  */
-function orOpt<T>(cb: ((arg: unknown) => arg is T)) {
+function _orOpt<T>(cb: ((arg: unknown) => arg is T)) {
   return (arg: unknown): arg is (T | undefined) => {
     if (isUndef(arg)) {
       return true;
@@ -292,7 +256,7 @@ function orOpt<T>(cb: ((arg: unknown) => arg is T)) {
 /**
  * Allow param to be undefined
  */
-function orNul<T>(cb: ((arg: unknown) => arg is T)) {
+function _orNul<T>(cb: ((arg: unknown) => arg is T)) {
   return (arg: unknown): arg is (T | null) => {
     if (arg === null) {
       return true;
@@ -305,7 +269,7 @@ function orNul<T>(cb: ((arg: unknown) => arg is T)) {
 /**
  * Check array counterpart for validator item.
  */
-function isArr<T>(cb: ((arg: unknown) => arg is T)) {
+function _isArr<T>(cb: ((arg: unknown) => arg is T)) {
   return (arg: unknown): arg is T[] => {
     return Array.isArray(arg) && !arg.some(item => !cb(item));
   };
@@ -315,7 +279,7 @@ function isArr<T>(cb: ((arg: unknown) => arg is T)) {
  * See if a string satisfies the regex. NOTE: this lets an empty string be a 
  * valid value.
  */
-function isRgx<T>(rgx: RegExp) {
+function _isRgx<T>(rgx: RegExp) {
   return (arg: unknown): arg is T => {
     return (isStr(arg) && arg.length < 254 && (arg === '' || rgx.test(arg)));
   };
@@ -324,7 +288,7 @@ function isRgx<T>(rgx: RegExp) {
 /**
  * Wrapper to check basic type.
  */
-function checkType<T>(type: string) {
+function _checkType<T>(type: string) {
   return (arg: unknown): arg is T => {
     return (
       typeof arg === type &&
@@ -477,4 +441,144 @@ function _isKeyOfBase<
     }
     return isInKeys(arg);
   };
+}
+
+
+// **** Transform **** //
+
+export type TValidateWithTransform<T> = (arg: unknown, cb?: (arg: T) => void) => arg is T;
+
+/**
+ * Transform a value before checking it.
+ */
+export function transform<T>(
+  transFn: TFunc,
+  vldt: ((arg: unknown) => arg is T),
+): TValidateWithTransform<T> {
+  return (arg: unknown, cb?: (arg: T) => void): arg is T => {
+    if (arg !== undefined) {
+      arg = transFn(arg);
+    }
+    cb?.(arg as T);
+    return vldt(arg);
+  };
+}
+
+
+// **** Parse **** //
+
+interface TSchema {
+  [key: string]: TValidateWithTransform<unknown> | TSchema;
+}
+
+type TInferParseRes<U, O, N, A, Schema = TInferParseResHelper<U>> = (
+  AddMods<Schema, O, N, A>
+);
+
+type TInferParseResHelper<U> = {
+  [K in keyof U]: U[K] extends TValidateWithTransform<infer X> ? X : never;
+};
+
+/**
+ * Allow optional, nullable, is array modifiers to parse.
+ */
+function _parseBase<
+  O extends boolean,
+  N extends boolean,
+  A extends boolean,
+>(
+  optional: O,
+  nullable: N,
+  isArr: A,
+) {
+  return <U extends TSchema>(
+    schema: U,
+    arg: unknown,
+    onError?: (
+      A extends true 
+      ? ((property?: string, value?: unknown, index?: number) => void) 
+      : ((property?: string, value?: unknown) => void)
+    ),
+  ) => _parseHelper(optional, nullable, isArr, schema, arg, onError) as TInferParseRes<U, O, N, A>;
+}
+
+/**
+ * Helper function to override some type issues.
+ */
+function _parseHelper(
+  optional: boolean,
+  nullable: boolean,
+  isArr: boolean,
+  schema: TSchema,
+  arg: unknown,
+  onError?: TFunc,
+) {
+  // check 'undefined'
+  if (arg === undefined) {
+    if (!optional) {
+      onError?.('object value was undefined but not optional', arg);
+      return undefined;
+    }
+  }
+  // check null
+  if (arg === null) {
+    if (!nullable) {
+      onError?.('object value was null but not nullable', arg);
+      return undefined;
+    }
+    return null;
+  }
+  // check array
+  if (isArr) {
+    if (!Array.isArray(arg)) {
+      onError?.('object not an array', arg);
+      return null;
+    }
+    // Iterate array
+    const resp = [];
+    for (let i = 0; i < arg.length; i++) {
+      const item: unknown = arg[i];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      const parsedItem = _parseCore(schema, item, (prop, val) => onError?.(prop, val, i));
+      if (parsedItem === undefined) {
+        return undefined;
+      } else {
+        resp.push(parsedItem);
+      }
+    }
+    return resp;
+  }
+  // Return
+  return _parseCore(schema, arg, onError);
+}
+
+/**
+ * Iterate an object, apply a validator function to to each property in an 
+ * object using the schema.
+ */
+function _parseCore(
+  schema: TSchema,
+  arg: unknown,
+  onError?: (property?: string, value?: unknown) => void,
+) {
+  if (!isObj(arg)) {
+    return;
+  }
+  const retVal: TBasicObj = {};
+  for (const key in schema) {
+    const schemaProp = schema[key];
+    let val = (arg as TBasicObj)[key];
+    if (typeof schemaProp === 'object') {
+      const childVal = _parseCore(schemaProp, val, onError);
+      if (childVal !== undefined) {
+        val = childVal;
+      }
+    } else if (typeof schemaProp === 'function') {
+      if (!schemaProp(val, (tval: unknown) => val = tval)) {
+        return onError?.(key, val);
+      };
+    }
+    retVal[key] = val;
+  }
+  return retVal;
 }

@@ -74,7 +74,6 @@ import {
   isNishEnumVal,
   isOptEnumVal,
   isNulEnumVal,
-  transform,
   isNishOrInArr,
   isNeStr,
   isOptNeStr,
@@ -86,7 +85,10 @@ import {
   isNulRangeArr,
   isKeyOf,
   isNulKeyOfArr,
-  pull,
+  transform,
+  parse,
+  optParse,
+  parseArr,
 } from '../src/validators';
 
 
@@ -386,9 +388,11 @@ test('test User all default values', () => {
 });
 
 
-test('test "pull" function', () => {
+test('test "parse" function', () => {
 
-  const user = pull({
+  // ** Basic Test ** //
+
+  const user = parse({
     id: transform(Number, isNum),
     name: isStr,
   }, {
@@ -397,7 +401,7 @@ test('test "pull" function', () => {
     email: '--',
   });
 
-  const userBad = pull({
+  const userBad = parse({
     id: isNum,
     name: isStr,
   }, {
@@ -407,5 +411,45 @@ test('test "pull" function', () => {
   });
 
   expect(user).toStrictEqual({ id: 5, name: 'john' });
-  expect(userBad).toStrictEqual(null);
+  expect(userBad).toStrictEqual(undefined);
+
+
+  // ** Optional Parse ** //
+
+  const undefUser1 = optParse({
+    id: isNum,
+    name: isStr,
+  }, {
+    id: 15,
+    name: 'joe',
+    email: '--',
+  });
+
+  const undefUser2 = optParse({
+    id: isNum,
+    name: isStr,
+  }, undefined);
+
+  
+  expect(undefUser1).toStrictEqual({ id: 15, name: 'joe' });
+  expect(undefUser2).toStrictEqual(undefined);
+
+
+  // **** Array Test **** //
+
+  const userArr = [user, { id: 1, name: 'a' }, { id: 2, name: 'b' }],
+    userArrBad = [user, { id: 1, name: 'a' }, { idd: 2, name: 'b' }];
+
+  const parsedUserArr = parseArr({
+    id: isNum,
+    name: isStr,
+  }, userArr);
+
+  const parsedUserArrBad = parseArr({
+    id: isNum,
+    name: isStr,
+  }, userArrBad);
+
+  expect(userArr).toStrictEqual(parsedUserArr);
+  expect(parsedUserArrBad).toStrictEqual(undefined);
 });

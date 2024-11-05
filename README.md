@@ -13,3 +13,9 @@ Abbreviations used in naming functions:
 - `Opt` optional, (`value | undefined`)
 - `Nul` nullable, (`value | null`)
 - `Nish` nullish, (`value | null | undefined`)
+
+
+2 special functions I want to mention:
+  - `transform`: a utility function to modify a value before validating, a callback returns the modified value.
+  - `parse`: validates an object schema, calls an error function is supplied one, returns undefined if the parse fails, and works recursively too. 
+
