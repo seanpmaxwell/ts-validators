@@ -86,6 +86,7 @@ import {
   isNulRangeArr,
   isKeyOf,
   isNulKeyOfArr,
+  pull,
 } from '../src/validators';
 
 
@@ -382,4 +383,29 @@ test('test User all default values', () => {
   expect(isKeyofSomeObjectArr(['bada', 'foo'])).toStrictEqual(true);
   expect(isKeyofSomeObjectArr(null)).toStrictEqual(true);
   expect(isKeyofSomeObjectArr(['bar', 'foo', 'bing'])).toStrictEqual(false);
+});
+
+
+test('test :pull" function', () => {
+
+  const user = pull({
+    id: transform(Number, isNum),
+    name: isStr,
+  }, {
+    id: '5',
+    name: 'john',
+    email: '--',
+  });
+
+  const userBad = pull({
+    id: isNum,
+    name: isStr,
+  }, {
+    id: '5',
+    name: 'john',
+    email: '--',
+  });
+
+  expect(user).toStrictEqual({ id: 5, name: 'john' });
+  expect(userBad).toStrictEqual(null);
 });

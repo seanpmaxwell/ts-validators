@@ -14,6 +14,11 @@ type AddNull<T, N> = (N extends true ? T | null : T);
 type AddNullables<T, O, N> = (O extends true ? AddNull<T, N> | undefined  : AddNull<T, N>);
 type AddMods<T, O, N, A> = A extends true ? AddNullables<T[], O, N> : AddNullables<T, O, N>;
 
+// Get response type for pull function
+type TInferPullRes<U> = {
+  [K in keyof U]: U[K] extends TValidateWithTransform<infer X> ? X : never;
+};
+
 
 
 // **** Variables **** //
@@ -240,6 +245,32 @@ export function transform<T>(
     cb?.(arg as T);
     return vldt(arg);
   };
+}
+
+/**
+ * Iterate an object, apply a validator function to to each property in an 
+ * object using the schema. If the schema validation fails, return null. You
+ * can also pass an optional callback method that will fire on failure.
+ */
+export function pull<U extends Record<string, TValidateWithTransform<unknown>>>(
+  schema: U,
+  arg: unknown,
+  onError?: (property: string, value: unknown) => void,
+): TInferPullRes<U> | null {
+  if (!isObj(arg)) {
+    return null;
+  }
+  const retVal: TBasicObj = {};
+  for (const key in schema) {
+    const testFn = schema[key];
+    let val = (arg as TBasicObj)[key];
+    if (!testFn(val, tval => val = tval)) {
+      onError?.(key, val);
+      return null;
+    };
+    retVal[key] = val;
+  }
+  return retVal as (TInferPullRes<U> | null);
 }
 
 
