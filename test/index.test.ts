@@ -386,7 +386,7 @@ test('test User all default values', () => {
 });
 
 
-test('test :pull" function', () => {
+test('test "pull" function', () => {
 
   const user = pull({
     id: transform(Number, isNum),
