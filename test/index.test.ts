@@ -390,8 +390,7 @@ test('test User all default values', () => {
 
 test('test "parse" function', () => {
 
-  // ** Basic Test ** //
-
+  // Basic Test
   const user = parse({
     id: transform(Number, isNum),
     name: isStr,
@@ -400,7 +399,6 @@ test('test "parse" function', () => {
     name: 'john',
     email: '--',
   });
-
   const userBad = parse({
     id: isNum,
     name: isStr,
@@ -409,13 +407,10 @@ test('test "parse" function', () => {
     name: 'john',
     email: '--',
   });
-
   expect(user).toStrictEqual({ id: 5, name: 'john' });
   expect(userBad).toStrictEqual(undefined);
 
-
-  // ** Optional Parse ** //
-
+  // Optional Parse
   const undefUser1 = optParse({
     id: isNum,
     name: isStr,
@@ -424,38 +419,28 @@ test('test "parse" function', () => {
     name: 'joe',
     email: '--',
   });
-
   const undefUser2 = optParse({
     id: isNum,
     name: isStr,
   }, undefined);
-
-  
   expect(undefUser1).toStrictEqual({ id: 15, name: 'joe' });
   expect(undefUser2).toStrictEqual(undefined);
 
-
-  // **** Array Test **** //
-
+  // Array Test
   const userArr = [user, { id: 1, name: 'a' }, { id: 2, name: 'b' }],
     userArrBad = [user, { id: 1, name: 'a' }, { idd: 2, name: 'b' }];
-
   const parsedUserArr = parseArr({
     id: isNum,
     name: isStr,
   }, userArr);
-
   const parsedUserArrBad = parseArr({
     id: isNum,
     name: isStr,
   }, userArrBad);
-
   expect(userArr).toStrictEqual(parsedUserArr);
   expect(parsedUserArrBad).toStrictEqual(undefined);
 
-
-  // **** Nested Object Test (Good) **** //
-
+  // Nested Object Test (Good)
   const userWithAddr = parse({
     id: isNum,
     name: isStr,
@@ -471,7 +456,6 @@ test('test "parse" function', () => {
       zip: 98111,
     },
   });
-
   expect(userWithAddr).toStrictEqual({
     id: 5,
     name: 'john',
@@ -482,8 +466,7 @@ test('test "parse" function', () => {
   });
   expect(userWithAddr.address.zip).toBe(98111);
 
-  // **** Nested Object Test (Bad) **** //
-
+  // Nested Object Test (Bad)
   const userWithAddrBad = parse({
     id: isNum,
     name: isStr,
