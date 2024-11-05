@@ -452,4 +452,52 @@ test('test "parse" function', () => {
 
   expect(userArr).toStrictEqual(parsedUserArr);
   expect(parsedUserArrBad).toStrictEqual(undefined);
+
+
+  // **** Nested Object Test (Good) **** //
+
+  const userWithAddr = parse({
+    id: isNum,
+    name: isStr,
+    address: {
+      city: isStr,
+      zip: isNum,
+    },
+  }, {
+    id: 5,
+    name: 'john',
+    address: {
+      city: 'seattle',
+      zip: 98111,
+    },
+  });
+
+  expect(userWithAddr).toStrictEqual({
+    id: 5,
+    name: 'john',
+    address: {
+      city: 'seattle',
+      zip: 98111,
+    },
+  });
+  expect(userWithAddr.address.zip).toBe(98111);
+
+  // **** Nested Object Test (Bad) **** //
+
+  const userWithAddrBad = parse({
+    id: isNum,
+    name: isStr,
+    address: {
+      city: isStr,
+      zip: isNum,
+    },
+  }, {
+    id: 5,
+    name: 'john',
+    address: {
+      city: 'seattle',
+      zip: '98111',
+    },
+  });
+  expect(userWithAddrBad).toBe(undefined);
 });

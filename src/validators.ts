@@ -476,7 +476,13 @@ type TInferParseRes<U, O, N, A, Schema = TInferParseResHelper<U>> = (
 );
 
 type TInferParseResHelper<U> = {
-  [K in keyof U]: U[K] extends TValidateWithTransform<infer X> ? X : never;
+  [K in keyof U]: (
+    U[K] extends TValidateWithTransform<infer X> 
+    ? X 
+    : U[K] extends TSchema
+    ? TInferParseResHelper<U[K]>
+    : never
+  );
 };
 
 /**
@@ -572,6 +578,8 @@ function _parseCore(
       const childVal = _parseCore(schemaProp, val, onError);
       if (childVal !== undefined) {
         val = childVal;
+      } else {
+        return undefined;
       }
     } else if (typeof schemaProp === 'function') {
       if (!schemaProp(val, (tval: unknown) => val = tval)) {
