@@ -16,6 +16,9 @@ Abbreviations used in naming functions:
 
 
 2 special functions I want to mention:
-  - `transform`: a utility function to modify a value before validating, a callback returns the modified value.
-  - `parse`: validates an object schema, calls an error function is supplied one, returns undefined if the parse fails, and works recursively too. 
+  - `.transform`: a utility function to modify a value before validating, a callback returns the modified value.
+  - `.parse`: validates an object schema, calls an error function is supplied one, returns `undefined` if the parse fails, and works recursively too.
+  
+
+> I use `.parse` when validating express request objects. If you want to see an example of `.parse` in action you can checkout this repo () // pick up here
 

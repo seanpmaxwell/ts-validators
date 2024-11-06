@@ -10,6 +10,7 @@ export type TColor = `#${string}`;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TFunc = (...args: any[]) => any;
 export type TBasicObj = Record<string, unknown>;
+type TValidateWithTransform<T> = (arg: unknown, cb?: (arg: T) => void) => arg is T;
 
 // Add modifiers
 type AddNull<T, N> = (N extends true ? T | null : T);
@@ -442,11 +443,6 @@ function _isKeyOfBase<
     return isInKeys(arg);
   };
 }
-
-
-// **** Transform **** //
-
-export type TValidateWithTransform<T> = (arg: unknown, cb?: (arg: T) => void) => arg is T;
 
 /**
  * Transform a value before checking it.
