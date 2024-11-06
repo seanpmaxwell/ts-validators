@@ -157,17 +157,6 @@ export const isOptKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, tr
 export const isNulKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, false, true, true>(arg, false, true, true);
 export const isNishKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, true, true, true>(arg, true, true, true);
 
-// Parse will make sure an object matches the schema, if it does not pass, then 'undefined' 
-// will be returned and the .error function will fire (if you supplied one).
-export const parse = _parseBase<false, false, false>(false, false, false);
-export const optParse = _parseBase<true, false, false>(true, false, false);
-export const nulParse = _parseBase<false, true, false>(false, true, false);
-export const nishParse = _parseBase<true, true, false>(true, true, false);
-export const parseArr = _parseBase<false, false, true>(false, false, true);
-export const optParseArr = _parseBase<true, false, true>(true, false, true);
-export const nulParseArr = _parseBase<false, true, true>(false, true, true);
-export const nishParseArr = _parseBase<true, true, true>(true, true, true);
-
 
 // **** Misc **** //
 
@@ -482,32 +471,39 @@ type TInferParseResHelper<U> = {
 };
 
 /**
- * Allow optional, nullable, is array modifiers to parse.
+ * validates an object schema, calls an error function is supplied one, returns 
+ * "undefined" if the parse fails, and works recursively too.
  */
-function _parseBase<
-  O extends boolean,
-  N extends boolean,
-  A extends boolean,
+export function parse<
+  U extends TSchema,
+  O extends boolean = false,
+  N extends boolean = false,
+  A extends boolean = false,
 >(
-  optional: O,
-  nullable: N,
-  isArr: A,
+  schema: U,
+  optional?: O,
+  nullable?: N,
+  isArr?: A,
+  onError?: (
+    A extends true 
+    ? ((property?: string, value?: unknown, index?: number) => void) 
+    : ((property?: string, value?: unknown) => void)
+  ),
 ) {
-  return <U extends TSchema>(
-    schema: U,
-    arg: unknown,
-    onError?: (
-      A extends true 
-      ? ((property?: string, value?: unknown, index?: number) => void) 
-      : ((property?: string, value?: unknown) => void)
-    ),
-  ) => _parseHelper(optional, nullable, isArr, schema, arg, onError) as TInferParseRes<U, O, N, A>;
+  return (arg: unknown) => _parseCore(
+    !!optional,
+    !!nullable,
+    !!isArr,
+    schema,
+    arg,
+    onError,
+  ) as TInferParseRes<U, O, N, A>;
 }
 
 /**
- * Helper function to override some type issues.
+ * Validate the schema. 
  */
-function _parseHelper(
+function _parseCore(
   optional: boolean,
   nullable: boolean,
   isArr: boolean,
@@ -541,7 +537,7 @@ function _parseHelper(
     for (let i = 0; i < arg.length; i++) {
       const item: unknown = arg[i];
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      const parsedItem = _parseCore(schema, item, (prop, val) => onError?.(prop, val, i));
+      const parsedItem = _parseCoreHelper(schema, item, (prop, val) => onError?.(prop, val, i));
       if (parsedItem === undefined) {
         return undefined;
       } else {
@@ -551,14 +547,14 @@ function _parseHelper(
     return resp;
   }
   // Return
-  return _parseCore(schema, arg, onError);
+  return _parseCoreHelper(schema, arg, onError);
 }
 
 /**
  * Iterate an object, apply a validator function to to each property in an 
  * object using the schema.
  */
-function _parseCore(
+function _parseCoreHelper(
   schema: TSchema,
   arg: unknown,
   onError?: (property?: string, value?: unknown) => void,
@@ -571,7 +567,7 @@ function _parseCore(
     const schemaProp = schema[key];
     let val = (arg as TBasicObj)[key];
     if (typeof schemaProp === 'object') {
-      const childVal = _parseCore(schemaProp, val, onError);
+      const childVal = _parseCoreHelper(schemaProp, val, onError);
       if (childVal !== undefined) {
         val = childVal;
       } else {

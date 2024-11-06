@@ -87,9 +87,6 @@ import {
   isNulKeyOfArr,
   transform,
   parse,
-  optParse,
-  parseArr,
-  nishParseArr,
 } from '../src/validators';
 
 
@@ -392,74 +389,69 @@ test('test User all default values', () => {
 test('test "parse" function', () => {
 
   // Basic Test
-  const user = parse({
+  const parseUser = parse({
     id: transform(Number, isNum),
     name: isStr,
-  }, {
+  }); 
+  const user = parseUser({
     id: '5',
     name: 'john',
     email: '--',
   });
-  const userBad = parse({
-    id: isNum,
-    name: isStr,
-  }, {
-    id: '5',
+  const userBad = parseUser({
+    idd: '5',
     name: 'john',
     email: '--',
   });
   expect(user).toStrictEqual({ id: 5, name: 'john' });
   expect(userBad).toStrictEqual(undefined);
 
-  // Optional Parse
-  const undefUser1 = optParse({
+  // Parse optional arg
+  const parseOptUser = parse({
     id: isNum,
     name: isStr,
-  }, {
+  }, true);
+  const optUser = parseOptUser({
     id: 15,
     name: 'joe',
     email: '--',
   });
-  const undefUser2 = optParse({
-    id: isNum,
-    name: isStr,
-  }, undefined);
-  expect(undefUser1).toStrictEqual({ id: 15, name: 'joe' });
-  expect(undefUser2).toStrictEqual(undefined);
+  const optUser2 = parseOptUser(undefined);
+  expect(optUser).toStrictEqual({ id: 15, name: 'joe' });
+  expect(optUser2).toStrictEqual(undefined);
 
   // Array Test
   const userArr = [user, { id: 1, name: 'a' }, { id: 2, name: 'b' }],
     userArrBad = [user, { id: 1, name: 'a' }, { idd: 2, name: 'b' }];
-  const parsedUserArr = parseArr({
+  // Normal array test
+  const parseUserArr = parse({
     id: isNum,
     name: isStr,
-  }, userArr);
-  const parsedUserArrBad = parseArr({
-    id: isNum,
-    name: isStr,
-  }, userArrBad);
+  }, false, false, true);
+  const parsedUserArr = parseUserArr(userArr),
+    parsedUserArrBad = parseOptUser(userArrBad);
   expect(userArr).toStrictEqual(parsedUserArr);
   expect(parsedUserArrBad).toStrictEqual(undefined);
-  const parsedNishUserArr = nishParseArr({
+  // Nullish or array
+  const parseNishUserArr = parse({
     id: isNum,
     name: isStr,
-  }, null);
+  }, true, true, true);
+  const parsedNishUserArr = parseNishUserArr(null);
   expect(parsedNishUserArr).toStrictEqual(null);
-  const parsedNishUserArr2 = nishParseArr({
-    id: isNum,
-    name: isStr,
-  }, userArr);
+  const parsedNishUserArr2 = parseNishUserArr(userArr);
   expect(parsedNishUserArr2).toStrictEqual(userArr);
 
   // Nested Object Test (Good)
-  const userWithAddr = parse({
+  const parseUserWithAddr = parse({
     id: isNum,
     name: isStr,
     address: {
       city: isStr,
       zip: isNum,
     },
-  }, {
+  });
+  const userWithAddr = parseUserWithAddr({
     id: 5,
     name: 'john',
     address: {
@@ -478,14 +470,7 @@ test('test "parse" function', () => {
   expect(userWithAddr.address.zip).toBe(98111);
 
   // Nested Object Test (Bad)
-  const userWithAddrBad = parse({
-    id: isNum,
-    name: isStr,
-    address: {
-      city: isStr,
-      zip: isNum,
-    },
-  }, {
+  const userWithAddrBad = parseUserWithAddr({
     id: 5,
     name: 'john',
     address: {
@@ -496,29 +481,31 @@ test('test "parse" function', () => {
   expect(userWithAddrBad).toBe(undefined);
 
   // Test parse "onError" function
-  parse({
+  const parseUserWithError = parse({
     id: isNum,
     name: isStr,
-  }, {
-    id: '5',
-    name: 'john',
-  }, (prop, value) => {
+  }, false, false, false, (prop, value) => {
     expect(prop).toStrictEqual('id');
     expect(value).toStrictEqual('5');
   });
+  parseUserWithError({
+    id: '5',
+    name: 'john',
+  });
 
-  // Test parse "onError" function
-  nishParseArr({
+  // Test parse "onError" function for array argument
+  const parseUserArrWithError = parse({
     id: isNum,
     name: isStr,
-  }, [
-    { id: 1, name: '1' },
-    { id: 2, name: '2' },
-    { id: '3', name: '3' },
-    { id: 3, name: '3' },
-  ], (prop, value, index) => {
+  }, false, false, true, (prop, value, index) => {
     expect(prop).toStrictEqual('id');
     expect(value).toStrictEqual('3');
     expect(index).toStrictEqual(2);
   });
+  parseUserArrWithError([
+    { id: 1, name: '1' },
+    { id: 2, name: '2' },
+    { id: '3', name: '3' },
+    { id: 3, name: '3' },
+  ]);
 });
