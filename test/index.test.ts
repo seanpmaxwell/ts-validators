@@ -89,6 +89,7 @@ import {
   parse,
   optParse,
   parseArr,
+  nishParseArr,
 } from '../src/validators';
 
 
@@ -439,6 +440,16 @@ test('test "parse" function', () => {
   }, userArrBad);
   expect(userArr).toStrictEqual(parsedUserArr);
   expect(parsedUserArrBad).toStrictEqual(undefined);
+  const parsedNishUserArr = nishParseArr({
+    id: isNum,
+    name: isStr,
+  }, null);
+  expect(parsedNishUserArr).toStrictEqual(null);
+  const parsedNishUserArr2 = nishParseArr({
+    id: isNum,
+    name: isStr,
+  }, userArr);
+  expect(parsedNishUserArr2).toStrictEqual(userArr);
 
   // Nested Object Test (Good)
   const userWithAddr = parse({
@@ -483,4 +494,31 @@ test('test "parse" function', () => {
     },
   });
   expect(userWithAddrBad).toBe(undefined);
+
+  // Test parse "onError" function
+  parse({
+    id: isNum,
+    name: isStr,
+  }, {
+    id: '5',
+    name: 'john',
+  }, (prop, value) => {
+    expect(prop).toStrictEqual('id');
+    expect(value).toStrictEqual('5');
+  });
+
+  // Test parse "onError" function
+  nishParseArr({
+    id: isNum,
+    name: isStr,
+  }, [
+    { id: 1, name: '1' },
+    { id: 2, name: '2' },
+    { id: '3', name: '3' },
+    { id: 3, name: '3' },
+  ], (prop, value, index) => {
+    expect(prop).toStrictEqual('id');
+    expect(value).toStrictEqual('3');
+    expect(index).toStrictEqual(2);
+  });
 });
