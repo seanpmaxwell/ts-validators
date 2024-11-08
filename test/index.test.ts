@@ -87,6 +87,9 @@ import {
   isNulKeyOfArr,
   transform,
   parse,
+  parseArr,
+  optParse,
+  nishParseArr,
 } from '../src/validators';
 
 
@@ -407,10 +410,10 @@ test('test "parse" function', () => {
   expect(userBad).toStrictEqual(undefined);
 
   // Parse optional arg
-  const parseOptUser = parse({
+  const parseOptUser = optParse({
     id: isNum,
     name: isStr,
-  }, true);
+  });
   const optUser = parseOptUser({
     id: 15,
     name: 'joe',
@@ -424,19 +427,19 @@ test('test "parse" function', () => {
   const userArr = [user, { id: 1, name: 'a' }, { id: 2, name: 'b' }],
     userArrBad = [user, { id: 1, name: 'a' }, { idd: 2, name: 'b' }];
   // Normal array test
-  const parseUserArr = parse({
+  const parseUserArr = parseArr({
     id: isNum,
     name: isStr,
-  }, false, false, true);
+  });
   const parsedUserArr = parseUserArr(userArr),
     parsedUserArrBad = parseOptUser(userArrBad);
   expect(userArr).toStrictEqual(parsedUserArr);
   expect(parsedUserArrBad).toStrictEqual(undefined);
   // Nullish or array
-  const parseNishUserArr = parse({
+  const parseNishUserArr = nishParseArr({
     id: isNum,
     name: isStr,
-  }, true, true, true);
+  });
   const parsedNishUserArr = parseNishUserArr(null);
   expect(parsedNishUserArr).toStrictEqual(null);
   const parsedNishUserArr2 = parseNishUserArr(userArr);
@@ -484,7 +487,7 @@ test('test "parse" function', () => {
   const parseUserWithError = parse({
     id: isNum,
     name: isStr,
-  }, false, false, false, (prop, value) => {
+  },  (prop, value) => {
     expect(prop).toStrictEqual('id');
     expect(value).toStrictEqual('5');
   });
@@ -494,10 +497,10 @@ test('test "parse" function', () => {
   });
 
   // Test parse "onError" function for array argument
-  const parseUserArrWithError = parse({
+  const parseUserArrWithError = parseArr({
     id: isNum,
     name: isStr,
-  }, false, false, true, (prop, value, index) => {
+  }, (prop, value, index) => {
     expect(prop).toStrictEqual('id');
     expect(value).toStrictEqual('3');
     expect(index).toStrictEqual(2);

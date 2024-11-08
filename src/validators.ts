@@ -157,6 +157,16 @@ export const isOptKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, tr
 export const isNulKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, false, true, true>(arg, false, true, true);
 export const isNishKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, true, true, true>(arg, true, true, true);
 
+// Parse
+export const parse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U>(arg, false, false, false, onError);
+export const optParse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, true>(arg, true, false, false, onError);
+export const nulParse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, false, true>(arg, false, true, false, onError);
+export const nishParse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, true, true>(arg, true, true, false, onError);
+export const parseArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseBase<U, false, false, true>(arg, false, false, true, onError);
+export const optParseArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseBase<U, true, false, true>(arg, true, false, true, onError);
+export const nulParseArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseBase<U, false, true, true>(arg, false, true, true, onError);
+export const nishParseArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseBase<U, true, true, true>(arg, true, true, true, onError);
+
 
 // **** Misc **** //
 
@@ -470,11 +480,17 @@ type TInferParseResHelper<U> = {
   );
 };
 
+type TParseOnError<A> = (
+  A extends true 
+  ? ((property?: string, value?: unknown, index?: number) => void) 
+  : ((property?: string, value?: unknown) => void)
+);
+
 /**
  * validates an object schema, calls an error function is supplied one, returns 
  * "undefined" if the parse fails, and works recursively too.
  */
-export function parse<
+function _parseBase<
   U extends TSchema,
   O extends boolean = false,
   N extends boolean = false,
@@ -484,11 +500,7 @@ export function parse<
   optional?: O,
   nullable?: N,
   isArr?: A,
-  onError?: (
-    A extends true 
-    ? ((property?: string, value?: unknown, index?: number) => void) 
-    : ((property?: string, value?: unknown) => void)
-  ),
+  onError?: TParseOnError<A>,
 ) {
   return (arg: unknown) => _parseCore(
     !!optional,
