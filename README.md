@@ -17,7 +17,7 @@ Abbreviations used in naming functions:
 
 2 special functions I want to mention:
   - `.transform`: a utility function to modify a value before validating, a callback returns the modified value.
-  - `.parse`: iterates an object using validator-functions to validate each property, calls an error function is supplied one, and returns `undefined` if the parse fails or the argument value (removing things not in the schema) if it passes: works recursively too ;)
+  - `.parse`: iterates an object using validator-functions to validate each property, calls an error function if supplied one, and returns `undefined` if the parse fails or the argument value (properties in the schema not included) if it passes; works recursively too ;)
   
 
 > I use `.parse` when validating express request objects. If you want to see an example of `.parse` in action you can checkout this repo: https://github.com/seanpmaxwell/express5-typescript-template/blob/master/src/routes/common/index.ts
