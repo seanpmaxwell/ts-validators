@@ -158,10 +158,10 @@ export const isNulKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, fa
 export const isNishKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, true, true, true>(arg, true, true, true);
 
 // Parse
-export const parse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U>(arg, false, false, false, onError);
-export const optParse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, true>(arg, true, false, false, onError);
-export const nulParse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, false, true>(arg, false, true, false, onError);
-export const nishParse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, true, true>(arg, true, true, false, onError);
+export const parse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, false, false, false>(arg, false, false, false, onError);
+export const optParse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, true, false, false>(arg, true, false, false, onError);
+export const nulParse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, false, true, false>(arg, false, true, false, onError);
+export const nishParse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, true, true, false>(arg, true, true, false, onError);
 export const parseArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseBase<U, false, false, true>(arg, false, false, true, onError);
 export const optParseArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseBase<U, true, false, true>(arg, true, false, true, onError);
 export const nulParseArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseBase<U, false, true, true>(arg, false, true, true, onError);
@@ -492,14 +492,14 @@ type TParseOnError<A> = (
  */
 function _parseBase<
   U extends TSchema,
-  O extends boolean = false,
-  N extends boolean = false,
-  A extends boolean = false,
+  O extends boolean,
+  N extends boolean,
+  A extends boolean,
 >(
   schema: U,
-  optional?: O,
-  nullable?: N,
-  isArr?: A,
+  optional: O,
+  nullable: N,
+  isArr: A,
   onError?: TParseOnError<A>,
 ) {
   return (arg: unknown) => _parseCore(
