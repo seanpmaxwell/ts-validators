@@ -104,7 +104,7 @@ export const isOptDateArr = _orOpt(isDateArr);
 export const isNulDateArr = _orNul(isDateArr);
 export const isNishDateArr = _orNul(isOptDateArr);
 
-// Valid date (is it a valid date after calling "Date()", could be a string or number)
+// Valid date (is it a valid date after calling "new Date()", could be a string or number)
 export const isValidDate = _transform((arg: unknown) => new Date(arg as Date), _isValidDate);
 export const isOptValidDate = _orOpt(isValidDate);
 export const isNulValidDate = _orNul(isValidDate);
