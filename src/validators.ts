@@ -54,6 +54,16 @@ export const isOptNumArr = _orOpt(isNumArr);
 export const isNulNumArr = _orNul(isNumArr);
 export const isNishNumArr = _orNul(isOptNumArr);
 
+// Valid number (is it still a number after doing "Number(arg)", could be a string)
+export const isValidNum = _transform(Number, isNum);
+export const isOptValidNum = _orOpt(isValidNum);
+export const isNulValidNum = _orNul(isValidNum);
+export const isNishValidNum = _orNul(isOptValidNum);
+export const isValidNumArr = _isArr(isValidNum);
+export const isOptValidNumArr = _orOpt(isValidNumArr);
+export const isNulValidNumArr = _orNul(isValidNumArr);
+export const isNishValidNumArr = _orNul(isOptValidNumArr);
+
 // Range
 export const isRange = _isRangeBase<false, false, false>(false, false, false);
 export const isOptRange = _isRangeBase<true, false, false>(true, false, false);
@@ -93,6 +103,16 @@ export const isDateArr = _isArr(isDate);
 export const isOptDateArr = _orOpt(isDateArr);
 export const isNulDateArr = _orNul(isDateArr);
 export const isNishDateArr = _orNul(isOptDateArr);
+
+// Valid date (is it a valid date after calling "Date()", could be a string or number)
+export const isValidDate = _transform((arg: unknown) => new Date(arg as Date), _isValidDate);
+export const isOptValidDate = _orOpt(isValidDate);
+export const isNulValidDate = _orNul(isValidDate);
+export const isNishValidDate = _orNul(isOptValidDate);
+export const isValidDateArr = _isArr(isValidDate);
+export const isOptValidDateArr = _orOpt(isValidDateArr);
+export const isNulValidDateArr = _orNul(isValidDateArr);
+export const isNishValidDateArr = _orNul(isOptValidDateArr);
 
 // Object
 export const isObj = _checkType<object>('object');
@@ -471,6 +491,13 @@ function _transform<T>(
     cb?.(arg as T);
     return vldt(arg);
   };
+}
+
+/**
+ * Is valid ate.
+ */
+function _isValidDate(arg: unknown): arg is Date {
+  return arg instanceof Date && !isNaN(arg.getTime());
 }
 
 

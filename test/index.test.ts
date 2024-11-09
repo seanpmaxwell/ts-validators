@@ -90,6 +90,8 @@ import {
   parseArr,
   optParse,
   nishParseArr,
+  isValidNum,
+  isValidDate,
 } from '../src/validators';
 
 
@@ -144,6 +146,9 @@ test('test User all default values', () => {
   expect(isNishNum(123)).toStrictEqual(true);
   expect(isNishNum(null)).toStrictEqual(true);
   expect(isNishNum(undefined)).toStrictEqual(true);
+
+  // Valid numbers
+  expect(isValidNum('123')).toStrictEqual(true);
 
   // Number Arrays
   expect(isNumArr([1, 2, 3])).toStrictEqual(true);
@@ -225,6 +230,12 @@ test('test User all default values', () => {
   expect(isNishDate(D1)).toStrictEqual(true);
   expect(isNishDate(null)).toStrictEqual(true);
   expect(isNishDate(undefined)).toStrictEqual(true);
+
+  // Valid Dates
+  expect(isValidDate(1731195800809)).toStrictEqual(true);
+  expect(isValidDate('2024-11-09T23:43:58.788Z')).toStrictEqual(true);
+  expect(isValidDate('2024-111-09T23:43:58.788Z')).toStrictEqual(false);
+  expect(isValidDate(12341234123412342)).toStrictEqual(false);
 
   // Date Arrays
   const D2 = new Date(), D3 = new Date();
