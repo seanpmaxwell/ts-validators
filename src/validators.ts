@@ -6,6 +6,7 @@
 export type TEnum = Record<string, string | number>;
 export type TEmail = `${string}@${string}`;
 export type TColor = `#${string}`;
+export type TURL = `${string}`;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TFunc = (...args: any[]) => any;
@@ -22,7 +23,8 @@ export type AddMods<T, O, N, A> = A extends true ? AddNullables<T[], O, N> : Add
 
 const EMAIL_RGX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   COLOR_RGX = new RegExp(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/),
-  ALPHA_NUMERIC = new RegExp('^[a-zA-Z0-9]*$');
+  ALPHA_NUMERIC = new RegExp('^[a-zA-Z0-9]*$'),
+  URL_RGX = /^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
 
 
 // **** Functions **** //
@@ -124,6 +126,12 @@ export const isOptEmail = _orOpt(isEmail);
 export const isNulEmail = _orNul(isEmail);
 export const isNishEmail = _orNul(isOptEmail);
 
+// URL
+export const isUrl = _isRgx<TURL>(URL_RGX);
+export const isOptUrl = _orOpt(isUrl);
+export const isNulUrl = _orNul(isUrl);
+export const isNishUrl = _orNul(isOptUrl);
+
 // Alpha-Numeric String
 export const isAlphaNumStr = _isRgx<string>(ALPHA_NUMERIC);
 export const isOptAlphaNumStr = _orOpt(isAlphaNumStr);
@@ -157,7 +165,7 @@ export const isOptKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, tr
 export const isNulKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, false, true, true>(arg, false, true, true);
 export const isNishKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, true, true, true>(arg, true, true, true);
 
-// Parse
+// Parse (makes sure an unknown value matches the provided schema)
 export const parse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, false, false, false>(arg, false, false, false, onError);
 export const optParse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, true, false, false>(arg, true, false, false, onError);
 export const nulParse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, false, true, false>(arg, false, true, false, onError);
@@ -167,13 +175,22 @@ export const optParseArr = <U extends TSchema>(arg: U, onError?: TParseOnError<t
 export const nulParseArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseBase<U, false, true, true>(arg, false, true, true, onError);
 export const nishParseArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseBase<U, true, true, true>(arg, true, true, true, onError);
 
+// Misc
+export const checkObjEntries = _checkObjEntries;
+export const isEnum = _isEnum;
 
-// **** Misc **** //
+// Util
+export const nonNullable = _nonNullable;
+export const transform = _transform;
+export const isArr = _isArr;
+
+
+// **** Helpers **** //
 
 /**
  * Extract null/undefined from a validator function.
  */
-export function nonNullable<T>(cb: ((arg: unknown) => arg is T)) {
+function _nonNullable<T>(cb: ((arg: unknown) => arg is T)) {
   return (arg: unknown): arg is NonNullable<T> => {
     if (isNoU(arg)) {
       return false;
@@ -186,7 +203,7 @@ export function nonNullable<T>(cb: ((arg: unknown) => arg is T)) {
 /**
  * Do a validator callback function for each object key/value pair.
  */
-export function checkObjEntries(
+function _checkObjEntries(
   val: unknown,
   cb: (key: string, val: unknown) => boolean,
 ): val is NonNullable<object> {
@@ -203,7 +220,7 @@ export function checkObjEntries(
 /**
  * Check if unknown is a valid enum object.
  */
-export function isEnum(arg: unknown): arg is TEnum {
+function _isEnum(arg: unknown): arg is TEnum {
   // Check is non-array object
   if (!(isObj(arg) && !Array.isArray(arg))) {
     return false;
@@ -236,9 +253,6 @@ export function isEnum(arg: unknown): arg is TEnum {
   // Return
   return true;
 }
-
-
-// **** Wrapper Functions **** //
 
 /**
  * Allow param to be undefined
@@ -446,7 +460,7 @@ function _isKeyOfBase<
 /**
  * Transform a value before checking it.
  */
-export function transform<T>(
+function _transform<T>(
   transFn: TFunc,
   vldt: ((arg: unknown) => arg is T),
 ): TValidateWithTransform<T> {
