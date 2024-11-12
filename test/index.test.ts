@@ -97,16 +97,6 @@ import {
 
 
 test('test User all default values', () => {
-
-  enum Scopes {
-    Public = 'public',
-    Private = 'private',
-  }
-
-  enum ScopesAlt {
-    Public,
-    Private,
-  }
   
   // Nullables
   expect(isUndef(undefined)).toStrictEqual(true);
@@ -361,6 +351,16 @@ test('test User all default values', () => {
   expect(isOptOrInArr(arr)('1')).toStrictEqual(true);
   expect(isOptOrInArr(arr)(undefined)).toStrictEqual(true);
   expect(isNishOrInArr(arr)(undefined)).toStrictEqual(true);
+
+  enum Scopes {
+    Public = 'public',
+    Private = 'private',
+  }
+
+  enum ScopesAlt {
+    Public,
+    Private,
+  }
   
   // Enums
   expect(isEnumVal(Scopes)('public')).toStrictEqual(true);
