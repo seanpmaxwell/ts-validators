@@ -44,6 +44,16 @@ export const isOptBoolArr = _orOpt(isBoolArr);
 export const isNulBoolArr = _orNul(isBoolArr);
 export const isNishBoolArr = _orNul(isOptBoolArr);
 
+// Is valid boolean ("true"/"false", true/false, "1/0", "1"/"0", "yes"/"no")
+export const isValidBool = _transform(_parseBool, isBool);
+export const isOptValidBool = _orOpt(isValidBool);
+export const isNulValidBool = _orNul(isValidBool);
+export const isNishValidBool = _orNul(isOptValidBool);
+export const isValidBoolArr = _isArr(isValidBool);
+export const isOptValidBoolArr = _orOpt(isValidBoolArr);
+export const isNulValidBoolArr = _orNul(isValidBoolArr);
+export const isNishValidBoolArr = _orNul(isOptValidBoolArr);
+
 // Number
 export const isNum = _checkType<number>('number');
 export const isOptNum = _orOpt(isNum);
@@ -203,6 +213,7 @@ export const isEnum = _isEnum;
 export const nonNullable = _nonNullable;
 export const transform = _transform;
 export const isArr = _isArr;
+export const parseBool = _parseBool;
 
 
 // **** Helpers **** //
@@ -494,10 +505,43 @@ function _transform<T>(
 }
 
 /**
- * Is valid ate.
+ * Is valid date.
  */
 function _isValidDate(arg: unknown): arg is Date {
   return arg instanceof Date && !isNaN(arg.getTime());
+}
+
+/**
+ * Convert all string/number boolean types to a boolean. If not a valid boolean
+ * return undefined.
+ */
+function _parseBool(arg: unknown): boolean | undefined {
+  if (typeof arg === 'string') {
+    arg = arg.toLowerCase();
+    if (arg === 'true') {
+      return true;
+    } else if (arg === 'false') {
+      return false;
+    } else if (arg === 'yes') {
+      return true;
+    } else if (arg === 'no') {
+      return false;
+    } else if (arg === '1') {
+      return true;
+    } else if (arg === '0') {
+      return false;
+    }
+  } else if (typeof arg === 'number') {
+    if (arg === 1) {
+      return true;
+    } else if (arg === 0) {
+      return false;
+    }
+  } else if (typeof arg === 'boolean') {
+    return arg;
+  }
+  // Default
+  return undefined;
 }
 
 

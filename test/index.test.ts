@@ -92,6 +92,7 @@ import {
   nishParseArr,
   isValidNum,
   isValidDate,
+  isValidBool,
 } from '../src/validators';
 
 
@@ -123,6 +124,20 @@ test('test User all default values', () => {
   expect(isNishBool(false)).toStrictEqual(true);
   expect(isNishBool(null)).toStrictEqual(true);
   expect(isNishBool(undefined)).toStrictEqual(true);
+
+  // Is valid boolean
+  expect(isValidBool(false)).toStrictEqual(true);
+  expect(isValidBool(true)).toStrictEqual(true);
+  expect(isValidBool('Yes')).toStrictEqual(true);
+  expect(isValidBool('no')).toStrictEqual(true);
+  expect(isValidBool('1')).toStrictEqual(true);
+  expect(isValidBool('0')).toStrictEqual(true);
+  expect(isValidBool(1)).toStrictEqual(true);
+  expect(isValidBool(0)).toStrictEqual(true);
+  expect(isValidBool('False')).toStrictEqual(true);
+  expect(isValidBool('tRuE')).toStrictEqual(true);
+  expect(isValidBool(1234)).toStrictEqual(false);
+  expect(isValidBool(undefined)).toStrictEqual(false);
 
   // Boolean Arrays
   expect(isBoolArr([false, true, false])).toStrictEqual(true);
