@@ -93,6 +93,8 @@ import {
   isValidNum,
   isValidDate,
   isValidBool,
+  isBigInt,
+  isOptBigInt,
 } from '../src/validators';
 
 
@@ -166,6 +168,10 @@ test('test User all default values', () => {
   expect(isNishNumArr([1, 2, 3])).toStrictEqual(true);
   expect(isNishNumArr(null)).toStrictEqual(true);
   expect(isNishNumArr(undefined)).toStrictEqual(true);
+
+  // BigInt
+  expect(isBigInt(1234567890123456789012345n)).toStrictEqual(true);
+  expect(isOptBigInt(undefined)).toStrictEqual(true);
 
   // Ranges
   const isValidAge = isRange(18, 130);

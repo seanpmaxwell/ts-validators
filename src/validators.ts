@@ -63,6 +63,16 @@ export const isOptNumArr = _orOpt(isNumArr);
 export const isNulNumArr = _orNul(isNumArr);
 export const isNishNumArr = _orNul(isOptNumArr);
 
+// BigInt
+export const isBigInt = _checkType<bigint>('bigint');
+export const isOptBigInt = _orOpt(isBigInt);
+export const isNulBigInt = _orNul(isBigInt);
+export const isNishBigInt = _orNul(isOptBigInt);
+export const isBigIntArr = _isArr(isBigInt);
+export const isOptBigIntArr = _orOpt(isBigIntArr);
+export const isNulBigIntArr = _orNul(isBigIntArr);
+export const isNishBigIntArr = _orNul(isOptBigIntArr);
+
 // Valid number (is it still a number after doing "Number(arg)", could be a string)
 export const isValidNum = _transform(Number, isNum);
 export const isOptValidNum = _orOpt(isValidNum);
@@ -179,6 +189,12 @@ export const isNulOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBa
 export const isNishOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, true, true>(arg, true, true);
 
 // Enums
+export const isEnum = _isEnum;
+export const isOptEnum = _orOpt(_isEnum);
+export const isNulEnum = _orNul(_isEnum);
+export const isNishEnum = _orNul(isOptEnum);
+
+// Is Enum value
 export const isEnumVal = <T>(arg: T) => _isEnumValBase<T, false, false>(arg, false, false);
 export const isOptEnumVal = <T>(arg: T) => _isEnumValBase<T, true, false>(arg, true, false);
 export const isNulEnumVal = <T>(arg: T) => _isEnumValBase<T, false, true>(arg, false, true);
@@ -206,7 +222,6 @@ export const nishParseArr = <U extends TSchema>(arg: U, onError?: TParseOnError<
 
 // Misc
 export const checkObjEntries = _checkObjEntries;
-export const isEnum = _isEnum;
 
 // Util
 export const nonNullable = _nonNullable;
@@ -382,7 +397,7 @@ function _isEnumValBase<T,
   nullable: N,
 ): ((arg: unknown) => arg is AddNullables<T[keyof T], O, N>) {
   // Check is enum
-  if (!isEnum(enumArg)) {
+  if (!_isEnum(enumArg)) {
     throw Error('Item to check from must be an enum.');
   }
   // Get keys
@@ -409,8 +424,13 @@ function _isEnumValBase<T,
 }
 
 /**
- * Determines if number is between two ranges. If you want to leave off a range, 
- * just use null. (0, null) => "0 or any positive number"
+ * Range will always determine if a number is >= the min and <= the max. If you want to 
+ * leave off a range, just use null. 
+ * 
+ * Examples:
+ * isRange(0, null) => "0 or any positive number"
+ * isRange(100, null) => "greater than or equal to 100"
+ * isRange(25, 75) => "between 25 and 75"
  */
 function _isRangeBase<
   O extends boolean,
