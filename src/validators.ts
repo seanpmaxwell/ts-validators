@@ -1,5 +1,12 @@
 /* eslint-disable max-len */
 
+// **** Variables **** //
+
+const EMAIL_RGX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+  COLOR_RGX = new RegExp(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/),
+  ALPHA_NUMERIC = new RegExp('^[a-zA-Z0-9]*$'),
+  URL_RGX = /^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
+
 
 // **** Types **** //
 
@@ -17,14 +24,6 @@ type TValidateWithTransform<T> = (arg: unknown, cb?: (arg: T) => void) => arg is
 type AddNull<T, N> = (N extends true ? T | null : T);
 type AddNullables<T, O, N> = (O extends true ? AddNull<T, N> | undefined  : AddNull<T, N>);
 export type AddMods<T, O, N, A> = A extends true ? AddNullables<T[], O, N> : AddNullables<T, O, N>;
-
-
-// **** Variables **** //
-
-const EMAIL_RGX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-  COLOR_RGX = new RegExp(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/),
-  ALPHA_NUMERIC = new RegExp('^[a-zA-Z0-9]*$'),
-  URL_RGX = /^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
 
 
 // **** Functions **** //
