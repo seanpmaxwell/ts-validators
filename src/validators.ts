@@ -188,7 +188,7 @@ export const isOptOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBa
 export const isNulOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, false, true>(arg, false, true);
 export const isNishOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, true, true>(arg, true, true);
 
-// Enums
+// Enums (NOTE: this does not work for mixed enums see: eslint@typescript-eslint/no-mixed-enums)
 export const isEnum = _isEnum;
 export const isOptEnum = _orOpt(_isEnum);
 export const isNulEnum = _orNul(_isEnum);
@@ -264,6 +264,7 @@ function _checkObjEntries(
 
 /**
  * Check if unknown is a valid enum object.
+ * NOTE: this does not work for mixed enums see: "eslint@typescript-eslint/no-mixed-enums"
  */
 function _isEnum(arg: unknown): arg is TEnum {
   // Check is non-array object
