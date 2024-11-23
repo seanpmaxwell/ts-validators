@@ -210,7 +210,7 @@ export const isOptKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, tr
 export const isNulKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, false, true, true>(arg, false, true, true);
 export const isNishKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, true, true, true>(arg, true, true, true);
 
-// Parse (makes sure an unknown value matches the provided schema)
+// Parse Object (check the properties against a schema)
 export const parseObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseObj<U, false, false, false>(arg, false, false, false, onError);
 export const optParseObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseObj<U, true, false, false>(arg, true, false, false, onError);
 export const nulParseObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseObj<U, false, true, false>(arg, false, true, false, onError);
