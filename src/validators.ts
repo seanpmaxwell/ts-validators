@@ -211,14 +211,14 @@ export const isNulKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, fa
 export const isNishKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, true, true, true>(arg, true, true, true);
 
 // Parse (makes sure an unknown value matches the provided schema)
-export const parse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, false, false, false>(arg, false, false, false, onError);
-export const optParse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, true, false, false>(arg, true, false, false, onError);
-export const nulParse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, false, true, false>(arg, false, true, false, onError);
-export const nishParse = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseBase<U, true, true, false>(arg, true, true, false, onError);
-export const parseArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseBase<U, false, false, true>(arg, false, false, true, onError);
-export const optParseArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseBase<U, true, false, true>(arg, true, false, true, onError);
-export const nulParseArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseBase<U, false, true, true>(arg, false, true, true, onError);
-export const nishParseArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseBase<U, true, true, true>(arg, true, true, true, onError);
+export const parseObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseObj<U, false, false, false>(arg, false, false, false, onError);
+export const optParseObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseObj<U, true, false, false>(arg, true, false, false, onError);
+export const nulParseObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseObj<U, false, true, false>(arg, false, true, false, onError);
+export const nishParseObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseObj<U, true, true, false>(arg, true, true, false, onError);
+export const parseObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseObj<U, false, false, true>(arg, false, false, true, onError);
+export const optParseObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseObj<U, true, false, true>(arg, true, false, true, onError);
+export const nulParseObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseObj<U, false, true, true>(arg, false, true, true, onError);
+export const nishParseObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseObj<U, true, true, true>(arg, true, true, true, onError);
 
 // Misc
 export const checkObjEntries = _checkObjEntries;
@@ -595,7 +595,7 @@ type TParseOnError<A> = (
  * validates an object schema, calls an error function is supplied one, returns 
  * "undefined" if the parse fails, and works recursively too.
  */
-function _parseBase<
+function _parseObj<
   U extends TSchema,
   O extends boolean,
   N extends boolean,

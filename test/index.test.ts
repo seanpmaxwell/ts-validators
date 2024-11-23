@@ -86,10 +86,10 @@ import {
   isKeyOf,
   isNulKeyOfArr,
   transform,
-  parse,
-  parseArr,
-  optParse,
-  nishParseArr,
+  parseObj,
+  parseObjArr,
+  optParseObj,
+  nishParseObjArr,
   isValidNum,
   isValidDate,
   isValidBool,
@@ -421,10 +421,10 @@ test('test User all default values', () => {
 });
 
 
-test('test "parse" function', () => {
+test('test "parseObj" function', () => {
 
   // Basic Test
-  const parseUser = parse({
+  const parseUser = parseObj({
     id: transform(Number, isNum),
     name: isStr,
   }); 
@@ -442,7 +442,7 @@ test('test "parse" function', () => {
   expect(userBad).toStrictEqual(undefined);
 
   // Parse optional arg
-  const parseOptUser = optParse({
+  const parseOptUser = optParseObj({
     id: isNum,
     name: isStr,
   });
@@ -459,7 +459,7 @@ test('test "parse" function', () => {
   const userArr = [user, { id: 1, name: 'a' }, { id: 2, name: 'b' }],
     userArrBad = [user, { id: 1, name: 'a' }, { idd: 2, name: 'b' }];
   // Normal array test
-  const parseUserArr = parseArr({
+  const parseUserArr = parseObjArr({
     id: isNum,
     name: isStr,
   });
@@ -468,7 +468,7 @@ test('test "parse" function', () => {
   expect(userArr).toStrictEqual(parsedUserArr);
   expect(parsedUserArrBad).toStrictEqual(undefined);
   // Nullish or array
-  const parseNishUserArr = nishParseArr({
+  const parseNishUserArr = nishParseObjArr({
     id: isNum,
     name: isStr,
   });
@@ -478,7 +478,7 @@ test('test "parse" function', () => {
   expect(parsedNishUserArr2).toStrictEqual(userArr);
 
   // Nested Object Test (Good)
-  const parseUserWithAddr = parse({
+  const parseUserWithAddr = parseObj({
     id: isNum,
     name: isStr,
     address: {
@@ -516,7 +516,7 @@ test('test "parse" function', () => {
   expect(userWithAddrBad).toBe(undefined);
 
   // Test parse "onError" function
-  const parseUserWithError = parse({
+  const parseUserWithError = parseObj({
     id: isNum,
     name: isStr,
   },  (prop, value) => {
@@ -529,7 +529,7 @@ test('test "parse" function', () => {
   });
 
   // Test parse "onError" function for array argument
-  const parseUserArrWithError = parseArr({
+  const parseUserArrWithError = parseObjArr({
     id: isNum,
     name: isStr,
   }, (prop, value, index) => {
