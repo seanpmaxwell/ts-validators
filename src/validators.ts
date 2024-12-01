@@ -607,7 +607,7 @@ function _parseObj<
   isArr: A,
   onError?: TParseOnError<A>,
 ) {
-  return (arg: unknown) => _parseCore(
+  return (arg: unknown) => _parseObjCore(
     !!optional,
     !!nullable,
     !!isArr,
@@ -620,7 +620,7 @@ function _parseObj<
 /**
  * Validate the schema. 
  */
-function _parseCore(
+function _parseObjCore(
   optional: boolean,
   nullable: boolean,
   isArr: boolean,
@@ -654,7 +654,7 @@ function _parseCore(
     for (let i = 0; i < arg.length; i++) {
       const item: unknown = arg[i];
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      const parsedItem = _parseCoreHelper(schema, item, (prop, val) => onError?.(prop, val, i));
+      const parsedItem = _parseObjCoreHelper(schema, item, (prop, val) => onError?.(prop, val, i));
       if (parsedItem === undefined) {
         return undefined;
       } else {
@@ -664,14 +664,14 @@ function _parseCore(
     return resp;
   }
   // Return
-  return _parseCoreHelper(schema, arg, onError);
+  return _parseObjCoreHelper(schema, arg, onError);
 }
 
 /**
  * Iterate an object, apply a validator function to to each property in an 
  * object using the schema.
  */
-function _parseCoreHelper(
+function _parseObjCoreHelper(
   schema: TSchema,
   arg: unknown,
   onError?: (property?: string, value?: unknown) => void,
