@@ -684,7 +684,7 @@ function _parseObjCoreHelper(
     const schemaProp = schema[key];
     let val = (arg as TBasicObj)[key];
     if (typeof schemaProp === 'object') {
-      const childVal = _parseCoreHelper(schemaProp, val, onError);
+      const childVal = _parseObjCoreHelper(schemaProp, val, onError);
       if (childVal !== undefined) {
         val = childVal;
       } else {
