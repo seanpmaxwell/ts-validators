@@ -565,7 +565,7 @@ function _parseBool(arg: unknown): boolean | undefined {
 }
 
 
-// **** Parse **** //
+// **** Parse Object **** //
 
 interface TSchema {
   [key: string]: TValidateWithTransform<unknown> | TSchema;
