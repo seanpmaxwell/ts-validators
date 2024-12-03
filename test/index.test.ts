@@ -558,7 +558,6 @@ test('test "parseObj" function', () => {
     } else {
       throw new Error('Value was not a valid string.');
     }
-    return false;
   };
   const parseUserHandleErr = parseObj({
     id: isNum,
