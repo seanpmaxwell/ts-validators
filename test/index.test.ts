@@ -98,6 +98,9 @@ import {
 } from '../src/validators';
 
 
+/**
+ * Test all the basic validators
+ */
 test('test User all default values', () => {
   
   // Nullables
@@ -421,9 +424,12 @@ test('test User all default values', () => {
 });
 
 
+/**
+ * Test "parseObj()" function
+ */
 test('test "parseObj" function', () => {
 
-  // Basic Test
+  // ** Basic Test **
   const parseUser = parseObj({
     id: transform(Number, isNum),
     name: isStr,
@@ -441,7 +447,7 @@ test('test "parseObj" function', () => {
   expect(user).toStrictEqual({ id: 5, name: 'john' });
   expect(userBad).toStrictEqual(undefined);
 
-  // Parse optional arg
+  // ** Parse optional object ** //
   const parseOptUser = optParseObj({
     id: isNum,
     name: isStr,
@@ -455,7 +461,7 @@ test('test "parseObj" function', () => {
   expect(optUser).toStrictEqual({ id: 15, name: 'joe' });
   expect(optUser2).toStrictEqual(undefined);
 
-  // Array Test
+  // ** Array Test ** //
   const userArr = [user, { id: 1, name: 'a' }, { id: 2, name: 'b' }],
     userArrBad = [user, { id: 1, name: 'a' }, { idd: 2, name: 'b' }];
   // Normal array test
@@ -477,7 +483,7 @@ test('test "parseObj" function', () => {
   const parsedNishUserArr2 = parseNishUserArr(userArr);
   expect(parsedNishUserArr2).toStrictEqual(userArr);
 
-  // Nested Object Test (Good)
+  // ** Nested Object Test (Good) ** //
   const parseUserWithAddr = parseObj({
     id: isNum,
     name: isStr,
@@ -504,7 +510,7 @@ test('test "parseObj" function', () => {
   });
   expect(userWithAddr.address.zip).toBe(98111);
 
-  // Nested Object Test (Bad)
+  // ** Nested Object Test (Bad) ** //
   const userWithAddrBad = parseUserWithAddr({
     id: 5,
     name: 'john',
@@ -515,7 +521,7 @@ test('test "parseObj" function', () => {
   });
   expect(userWithAddrBad).toBe(undefined);
 
-  // Test parse "onError" function
+  // ** Test parse "onError" function ** //
   const parseUserWithError = parseObj({
     id: isNum,
     name: isStr,
@@ -528,7 +534,7 @@ test('test "parseObj" function', () => {
     name: 'john',
   });
 
-  // Test parse "onError" function for array argument
+  // ** Test parseObj "onError" function for array argument ** //
   const parseUserArrWithError = parseObjArr({
     id: isNum,
     name: isStr,
@@ -543,4 +549,27 @@ test('test "parseObj" function', () => {
     { id: '3', name: '3' },
     { id: 3, name: '3' },
   ]);
+
+
+  // ** Test "parseObj" when validator throws error ** //
+  const isStrWithErr = (val: unknown): val is string => {
+    if (isStr(val)) {
+      return true;
+    } else {
+      throw new Error('Value was not a valid string.');
+    }
+    return false;
+  };
+  const parseUserHandleErr = parseObj({
+    id: isNum,
+    name: isStrWithErr,
+  }, (prop, value, caughtErr) => {
+    expect(prop).toStrictEqual('name');
+    expect(value).toStrictEqual(null);
+    expect(caughtErr).toStrictEqual('Value was not a valid string.');
+  });
+  parseUserHandleErr({
+    id: 5,
+    name: null,
+  });
 });

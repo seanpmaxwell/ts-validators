@@ -587,8 +587,8 @@ type TInferParseResHelper<U> = {
 
 type TParseOnError<A> = (
   A extends true 
-  ? ((property?: string, value?: unknown, index?: number) => void) 
-  : ((property?: string, value?: unknown) => void)
+  ? ((property?: string, value?: unknown, index?: number, caughtErr?: unknown) => void) 
+  : ((property?: string, value?: unknown, caughtErr?: unknown) => void)
 );
 
 /**
@@ -628,14 +628,14 @@ function _parseObjCore(
   arg: unknown,
   onError?: TFunc,
 ) {
-  // check 'undefined'
+  // Check "undefined"
   if (arg === undefined) {
     if (!optional) {
       onError?.('object value was undefined but not optional', arg);
       return undefined;
     }
   }
-  // check null
+  // Check "null"
   if (arg === null) {
     if (!nullable) {
       onError?.('object value was null but not nullable', arg);
@@ -643,7 +643,7 @@ function _parseObjCore(
     }
     return null;
   }
-  // check array
+  // Check "array"
   if (isArr) {
     if (!Array.isArray(arg)) {
       onError?.('object not an array', arg);
@@ -653,8 +653,9 @@ function _parseObjCore(
     const resp = [];
     for (let i = 0; i < arg.length; i++) {
       const item: unknown = arg[i];
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      const parsedItem = _parseObjCoreHelper(schema, item, (prop, val) => onError?.(prop, val, i));
+      const parsedItem = _parseObjCoreHelper(schema, item, (prop, val, caughtErr) => {
+        onError?.(prop, val, i, caughtErr);
+      });
       if (parsedItem === undefined) {
         return undefined;
       } else {
@@ -663,7 +664,7 @@ function _parseObjCore(
     }
     return resp;
   }
-  // Return
+  // Default
   return _parseObjCoreHelper(schema, arg, onError);
 }
 
@@ -674,7 +675,7 @@ function _parseObjCore(
 function _parseObjCoreHelper(
   schema: TSchema,
   arg: unknown,
-  onError?: (property?: string, value?: unknown) => void,
+  onError?: TParseOnError<false>,
 ) {
   if (!isObj(arg)) {
     return;
@@ -683,6 +684,7 @@ function _parseObjCoreHelper(
   for (const key in schema) {
     const schemaProp = schema[key];
     let val = (arg as TBasicObj)[key];
+    // Nested object
     if (typeof schemaProp === 'object') {
       const childVal = _parseObjCoreHelper(schemaProp, val, onError);
       if (childVal !== undefined) {
@@ -690,12 +692,22 @@ function _parseObjCoreHelper(
       } else {
         return undefined;
       }
+    // Run validator
     } else if (typeof schemaProp === 'function') {
-      if (!schemaProp(val, (tval: unknown) => val = tval)) {
-        return onError?.(key, val);
+      try {
+        if (!schemaProp(val, (tval: unknown) => val = tval)) {
+          return onError?.(key, val);
+        }
+      } catch (err) {
+        if (err instanceof Error) {
+          return onError?.(key, val, err.message);
+        } else {
+          return onError?.(key, val, err);
+        }
       }
     }
     retVal[key] = val;
   }
+  // Return
   return retVal;
 }
