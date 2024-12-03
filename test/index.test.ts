@@ -95,6 +95,7 @@ import {
   isValidBool,
   isBigInt,
   isOptBigInt,
+  safeJsonParse,
 } from '../src/validators';
 
 
@@ -402,7 +403,7 @@ test('test User all default values', () => {
   })).toStrictEqual(false);
 
   // Check transform function
-  const isNumArrWithParse = transform(JSON.parse, isNumArr);
+  const isNumArrWithParse = transform(safeJsonParse, isNumArr);
   expect(isNumArrWithParse('[1,2,3]', val => {
     expect(isNumArr(val)).toStrictEqual(true);
   })).toStrictEqual(true);

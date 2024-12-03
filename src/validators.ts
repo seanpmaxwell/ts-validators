@@ -228,6 +228,7 @@ export const nonNullable = _nonNullable;
 export const transform = _transform;
 export const isArr = _isArr;
 export const parseBool = _parseBool;
+export const safeJsonParse = _safeJsonParse;
 
 
 // **** Helpers **** //
@@ -512,7 +513,7 @@ function _isKeyOfBase<
  * Transform a value before checking it.
  */
 function _transform<T>(
-  transFn: TFunc,
+  transFn: (arg: unknown) => T,
   vldt: ((arg: unknown) => arg is T),
 ): TValidateWithTransform<T> {
   return (arg: unknown, cb?: (arg: T) => void): arg is T => {
@@ -562,6 +563,17 @@ function _parseBool(arg: unknown): boolean | undefined {
   }
   // Default
   return undefined;
+}
+
+/**
+ * Safe JSON parse
+ */
+function _safeJsonParse<T>(arg: unknown): T {
+  if (isStr(arg)) {
+    return JSON.parse(arg) as T;
+  } else {
+    throw Error('JSON parse argument must be a string');
+  }
 }
 
 
