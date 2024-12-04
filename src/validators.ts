@@ -14,9 +14,6 @@ export type TEnum = Record<string, string | number>;
 export type TEmail = `${string}@${string}`;
 export type TColor = `#${string}`;
 export type TURL = `${string}`;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type TFunc = (...args: any[]) => any;
 export type TBasicObj = Record<string, unknown>;
 type TValidateWithTransform<T> = (arg: unknown, cb?: (arg: T) => void) => arg is T;
 
@@ -154,7 +151,8 @@ export const isNulObjArr = _orNul(isObjArr);
 export const isNishObjArr = _orNul(isOptObjArr);
 
 // Function
-export const isFunc = _checkType<TFunc>('function');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isFunc = _checkType<(...args: any[]) => any>('function');
 export const isOptFunc = _orOpt(isFunc);
 export const isNulFunc = _orNul(isFunc);
 export const isNishFunc = _orNul(isOptFunc);
@@ -641,10 +639,10 @@ function _parseObj<
   isArr: A,
   onError?: TParseOnError<A>,
 ) {
-  return (arg: unknown) => _parseObjCore(
+  return (arg: unknown) => _parseObjCore<A>(
     !!optional,
     !!nullable,
-    !!isArr,
+    isArr,
     schema,
     arg,
     onError,
@@ -654,13 +652,13 @@ function _parseObj<
 /**
  * Validate the schema. 
  */
-function _parseObjCore(
+function _parseObjCore<A>(
   optional: boolean,
   nullable: boolean,
-  isArr: boolean,
+  isArr: A,
   schema: TSchema,
   arg: unknown,
-  onError?: TFunc,
+  onError?: TParseOnError<A>,
 ) {
   // Check "undefined"
   if (arg === undefined) {
@@ -697,9 +695,10 @@ function _parseObjCore(
       }
     }
     return resp;
-  }
   // Default
-  return _parseObjCoreHelper(schema, arg, onError);
+  } else {
+    return _parseObjCoreHelper(schema, arg, onError as TParseOnError<false>);
+  }
 }
 
 /**
