@@ -240,13 +240,10 @@ export const testOptObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError
 export const testNulObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _testObj<U, false, true, true>(arg, false, true, true, onError);
 export const testNishObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _testObj<U, true, true, true>(arg, true, true, true, onError);
 
-// Misc
-export const checkObjEntries = _checkObjEntries;
-
 // Util
+export const iterateObjEntries = _iterateObjEntries;
 export const nonNullable = _nonNullable;
 export const transform = _transform;
-export const isArr = _isArr;
 export const parseBool = _parseBool;
 export const safeJsonParse = _safeJsonParse;
 
@@ -267,58 +264,21 @@ function _nonNullable<T>(cb: ((arg: unknown) => arg is T)) {
 }
 
 /**
- * Do a validator callback function for each object key/value pair.
+ * Do a validator callback function for each object entry.
  */
-function _checkObjEntries(
-  val: unknown,
+function _iterateObjEntries<T = NonNullable<object>>(
   cb: (key: string, val: unknown) => boolean,
-): val is NonNullable<object> {
-  if (isObj(val)) {
-    for (const entry of Object.entries(val)) {
-      if (!cb(entry[0], entry[1])) {
-        return false;
+): (arg: unknown) => arg is T {
+  return (arg: unknown): arg is T => {
+    if (isObj(arg)) {
+      for (const entry of Object.entries(arg)) {
+        if (!cb(entry[0], entry[1])) {
+          return false;
+        }
       }
     }
-  }
-  return true;
-}
-
-/**
- * Check if unknown is a valid enum object.
- * NOTE: this does not work for mixed enums see: "eslint@typescript-eslint/no-mixed-enums"
- */
-function _isEnum(arg: unknown): arg is TEnum {
-  // Check is non-array object
-  if (!(isObj(arg) && !Array.isArray(arg))) {
-    return false;
-  }
-  // Check if string or number enum
-  const param = (arg as TBasicObj),
-    keys = Object.keys(param),
-    middle = Math.floor(keys.length / 2);
-  // ** String Enum ** //
-  if (!isNum(param[keys[middle]])) {
-    return checkObjEntries(arg, (key, val) => {
-      return isStr(key) && isStr(val);
-    });
-  }
-  // ** Number Enum ** //
-  // Enum key length will always be even
-  if (keys.length % 2 !== 0) {
-    return false;
-  }
-  // Check key/values
-  for (let i = 0; i < middle; i++) {
-    const thisKey = keys[i],
-      thisVal = param[thisKey],
-      thatKey = keys[i + middle],
-      thatVal = param[thatKey];
-    if (!(thisVal === thatKey && thisKey === String(thatVal))) {
-      return false;
-    }
-  }
-  // Return
-  return true;
+    return true;
+  };
 }
 
 /**
@@ -408,44 +368,6 @@ export function _isInArr<
 }
 
 /**
- * Check is value satisfies enum.
- */
-function _isEnumVal<T, 
-  O extends boolean,
-  N extends boolean
->(
-  enumArg: T,
-  optional: O,
-  nullable: N,
-): ((arg: unknown) => arg is AddNullables<T[keyof T], O, N>) {
-  // Check is enum
-  if (!_isEnum(enumArg)) {
-    throw Error('Item to check from must be an enum.');
-  }
-  // Get keys
-  let resp = Object.keys(enumArg).reduce((arr: unknown[], key) => {
-    if (!arr.includes(key)) {
-      arr.push(enumArg[key]);
-    }
-    return arr;
-  }, []);
-  // Check if string or number enum
-  if (isNum(enumArg[resp[0] as string])) {
-    resp = resp.map(item => enumArg[item as string]);
-  }
-  // Return validator function
-  return (arg: unknown): arg is AddNullables<T[keyof T], O, N> => {
-    if (isUndef(arg)) {
-      return !!optional;
-    }
-    if (isNull(arg)) {
-      return !!nullable;
-    }
-    return resp.some(val => arg === val);
-  };
-}
-
-/**
  * Range will always determine if a number is >= the min and <= the max. If you want to 
  * leave off a range, just use null. 
  * 
@@ -473,9 +395,9 @@ function _isInRange<
         return nullable;
       }
       if (isArr) {
-        return Array.isArray(arg) && !arg.some(item => !_isRangeCore(item, min, max));
+        return Array.isArray(arg) && !arg.some(item => !_isInRangeCore(item, min, max));
       }
-      return _isRangeCore(arg, min, max);
+      return _isInRangeCore(arg, min, max);
     };
   };
 }
@@ -483,7 +405,7 @@ function _isInRange<
 /**
  * Core logic for is array function.
  */
-function _isRangeCore(arg: unknown, min: number | null, max: number | null) {
+function _isInRangeCore(arg: unknown, min: number | null, max: number | null) {
   if (!isNum(arg)) {
     return false;
   }
@@ -596,34 +518,87 @@ function _safeJsonParse<T>(arg: unknown): T {
   }
 }
 
+
+// **** Enum Stuff **** //
+
+const _isStrEnum = _iterateObjEntries((key, val) => (isStr(key) && isStr(val)));
+
 /**
- * Like "parseObj" but returns a type-predicate instead of the object.
+ * Check if unknown is a valid enum object.
+ * NOTE: this does not work for mixed enums see: "eslint@typescript-eslint/no-mixed-enums"
  */
-function _testObj<
-  U extends TSchema,
+function _isEnum(arg: unknown): arg is TEnum {
+  // Check is non-array object
+  if (!(isObj(arg) && !Array.isArray(arg))) {
+    return false;
+  }
+  // Check if string or number enum
+  const param = (arg as TBasicObj),
+    keys = Object.keys(param),
+    middle = Math.floor(keys.length / 2);
+  // ** String Enum ** //
+  if (!isNum(param[keys[middle]])) {
+    return _isStrEnum(arg);
+  }
+  // ** Number Enum ** //
+  // Enum key length will always be even
+  if (keys.length % 2 !== 0) {
+    return false;
+  }
+  // Check key/values
+  for (let i = 0; i < middle; i++) {
+    const thisKey = keys[i],
+      thisVal = param[thisKey],
+      thatKey = keys[i + middle],
+      thatVal = param[thatKey];
+    if (!(thisVal === thatKey && thisKey === String(thatVal))) {
+      return false;
+    }
+  }
+  // Return
+  return true;
+}
+
+/**
+ * Check is value satisfies enum.
+ */
+function _isEnumVal<T, 
   O extends boolean,
-  N extends boolean,
-  A extends boolean,
+  N extends boolean
 >(
-  schema: U,
+  enumArg: T,
   optional: O,
   nullable: N,
-  isArr: A,
-  onError?: TParseOnError<A>,
-) {
-  const parseFn = _parseObj(schema, optional, nullable, isArr, onError);
-  return (arg: unknown): arg is typeof objRes => {
-    const objRes = parseFn(arg);
-    if (objRes === undefined) {
-      return false;
-    } else {
-      return true;
+): ((arg: unknown) => arg is AddNullables<T[keyof T], O, N>) {
+  // Check is enum
+  if (!_isEnum(enumArg)) {
+    throw Error('Item to check from must be an enum.');
+  }
+  // Get keys
+  let resp = Object.keys(enumArg).reduce((arr: unknown[], key) => {
+    if (!arr.includes(key)) {
+      arr.push(enumArg[key]);
     }
+    return arr;
+  }, []);
+  // Check if string or number enum
+  if (isNum(enumArg[resp[0] as string])) {
+    resp = resp.map(item => enumArg[item as string]);
+  }
+  // Return validator function
+  return (arg: unknown): arg is AddNullables<T[keyof T], O, N> => {
+    if (isUndef(arg)) {
+      return !!optional;
+    }
+    if (isNull(arg)) {
+      return !!nullable;
+    }
+    return resp.some(val => arg === val);
   };
 }
 
 
-// **** Parse Object **** //
+// **** Parse/Test Object **** //
 
 interface TSchema {
   [key: string]: TValidateWithTransform<unknown> | TSchema;
@@ -774,4 +749,30 @@ function _parseObjCoreHelper(
   }
   // Return
   return retVal;
+}
+
+/**
+ * Like "parseObj" but returns a type-predicate instead of the object.
+ */
+function _testObj<
+  U extends TSchema,
+  O extends boolean,
+  N extends boolean,
+  A extends boolean,
+>(
+  schema: U,
+  optional: O,
+  nullable: N,
+  isArr: A,
+  onError?: TParseOnError<A>,
+) {
+  const parseFn = _parseObj(schema, optional, nullable, isArr, onError);
+  return (arg: unknown): arg is typeof objRes => {
+    const objRes = parseFn(arg);
+    if (objRes === undefined) {
+      return false;
+    } else {
+      return true;
+    }
+  };
 }

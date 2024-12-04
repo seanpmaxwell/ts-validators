@@ -69,7 +69,7 @@ import {
   isOptOrInArr,
   nonNullable,
   isBasicObj,
-  checkObjEntries,
+  iterateObjEntries,
   isEnum,
   isNishEnumVal,
   isOptEnumVal,
@@ -409,14 +409,10 @@ test('test User all default values', () => {
   expect(isBasicObj([1, 2, 3])).toStrictEqual(false);
 
   // Check Object entries GOOD
-  expect(checkObjEntries({ a: 1, b: 2, c: 3 }, (key, val) => {
-    return isStr(key) && isNum(val);
-  })).toStrictEqual(true);
-
-  // Check Object entries BAD
-  expect(checkObjEntries({ a: 1, b: 2, c: 'asdf' }, (key, val) => {
-    return isStr(key) && isNum(val);
-  })).toStrictEqual(false);
+  const isStrNumObj = iterateObjEntries<Record<string, number>>((key, val) => 
+    isStr(key) && isNum(val));
+  expect(isStrNumObj({ a: 1, b: 2, c: 3 })).toStrictEqual(true);
+  expect(isStrNumObj({ a: 1, b: 2, c: 'asdf'})).toStrictEqual(false);
 
   // Check transform function
   const isNumArrWithParse = transform(safeJsonParse, isNumArr);
