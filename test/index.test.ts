@@ -45,14 +45,14 @@ import {
   isOptObjArr,
   isNulObjArr,
   isNishObjArr,
-  isFnArr,
-  isOptFnArr,
-  isNishFnArr,
-  isNulFnArr,
-  isNishFn,
-  isNulFn,
-  isOptFn,
-  isFn,
+  isFuncArr,
+  isOptFuncArr,
+  isNishFuncArr,
+  isNulFuncArr,
+  isNishFunc,
+  isNulFunc,
+  isOptFunc,
+  isFunc,
   isColor,
   isOptColor,
   isNulColor,
@@ -79,23 +79,28 @@ import {
   isOptNeStr,
   isNulNeStr,
   isNishNeStr,
-  isRange,
-  isNishRange,
-  isOptRange,
-  isNulRangeArr,
+  isInRange,
+  isNishInRange,
+  isOptInRange,
+  isNulInRangeArr,
   isKeyOf,
   isNulKeyOfArr,
   transform,
   parseObj,
   parseObjArr,
-  optParseObj,
-  nishParseObjArr,
+  parseOptObj,
+  parseNishObjArr,
   isValidNum,
   isValidDate,
   isValidBool,
   isBigInt,
   isOptBigInt,
   safeJsonParse,
+  testObj,
+  isSymbol,
+  isOptSymbol,
+  isNulSymbol,
+  isNishSymbol,
 } from '../src/validators';
 
 
@@ -178,21 +183,21 @@ test('test User all default values', () => {
   expect(isOptBigInt(undefined)).toStrictEqual(true);
 
   // Ranges
-  const isValidAge = isRange(18, 130);
+  const isValidAge = isInRange(18, 130);
   expect(isValidAge(123)).toStrictEqual(true);
   expect(isValidAge(5)).toStrictEqual(false);
   expect(isValidAge(150)).toStrictEqual(false);
-  const isPos = isNishRange(0, null);
+  const isPos = isNishInRange(0, null);
   expect(isPos(1_000_000)).toStrictEqual(true);
   expect(isPos(-1)).toStrictEqual(false);
   expect(isPos(undefined)).toStrictEqual(true);
   expect(isPos(null)).toStrictEqual(true);
-  const isNeg = isOptRange(null, -.000001);
+  const isNeg = isOptInRange(null, -.000001);
   expect(isNeg(-1_000_000)).toStrictEqual(true);
   expect(isNeg(.01)).toStrictEqual(false);
   expect(isNeg(undefined)).toStrictEqual(true);
   expect(isNeg(null)).toStrictEqual(false);
-  const isValidNums = isNulRangeArr(-1, 10);
+  const isValidNums = isNulInRangeArr(-1, 10);
   expect(isValidNums([-1, 2, 3])).toStrictEqual(true);
   expect(isValidNums([-1, 11, 3])).toStrictEqual(false);
   expect(isValidNums([-1, null, 3])).toStrictEqual(false);
@@ -233,6 +238,17 @@ test('test User all default values', () => {
   expect(isNishStrArr(['1', '2', '3'])).toStrictEqual(true);
   expect(isNishStrArr(null)).toStrictEqual(true);
   expect(isNishStrArr(undefined)).toStrictEqual(true);
+
+  // Symbol
+  expect(isSymbol(Symbol('foo'))).toStrictEqual(true);
+  expect(isSymbol(false)).toStrictEqual(false);
+  expect(isOptSymbol(Symbol('foo'))).toStrictEqual(true);
+  expect(isOptSymbol(undefined)).toStrictEqual(true);
+  expect(isNulSymbol(Symbol('foo'))).toStrictEqual(true);
+  expect(isNulSymbol(null)).toStrictEqual(true);
+  expect(isNishSymbol(Symbol('foo'))).toStrictEqual(true);
+  expect(isNishSymbol(null)).toStrictEqual(true);
+  expect(isNishSymbol(undefined)).toStrictEqual(true);
 
   // Date
   const D1 = new Date();
@@ -292,28 +308,28 @@ test('test User all default values', () => {
 
   // Functions
   const F1 = () => 1;
-  expect(isFn(F1)).toStrictEqual(true);
-  expect(isFn(false)).toStrictEqual(false);
-  expect(isOptFn(F1)).toStrictEqual(true);
-  expect(isOptFn(undefined)).toStrictEqual(true);
-  expect(isNulFn(F1)).toStrictEqual(true);
-  expect(isNulFn(null)).toStrictEqual(true);
-  expect(isNishFn(F1)).toStrictEqual(true);
-  expect(isNishFn(null)).toStrictEqual(true);
-  expect(isNishFn(undefined)).toStrictEqual(true);
+  expect(isFunc(F1)).toStrictEqual(true);
+  expect(isFunc(false)).toStrictEqual(false);
+  expect(isOptFunc(F1)).toStrictEqual(true);
+  expect(isOptFunc(undefined)).toStrictEqual(true);
+  expect(isNulFunc(F1)).toStrictEqual(true);
+  expect(isNulFunc(null)).toStrictEqual(true);
+  expect(isNishFunc(F1)).toStrictEqual(true);
+  expect(isNishFunc(null)).toStrictEqual(true);
+  expect(isNishFunc(undefined)).toStrictEqual(true);
 
   // Function Arrays
   const F2 = () => 2, F3 = () => 3;
-  expect(isFnArr([F1, F2, F3])).toStrictEqual(true);
-  expect(isFnArr([F1, F2, '2024-10-30T20:08:36.838Z'])).toStrictEqual(false);
-  expect(isFnArr(F1)).toStrictEqual(false);
-  expect(isOptFnArr([F1, F2, F3])).toStrictEqual(true);
-  expect(isOptFnArr(undefined)).toStrictEqual(true);
-  expect(isNulFnArr([F1, F2, F3])).toStrictEqual(true);
-  expect(isNulFnArr(null)).toStrictEqual(true);
-  expect(isNishFnArr([F1, F2, F3])).toStrictEqual(true);
-  expect(isNishFnArr(null)).toStrictEqual(true);
-  expect(isNishFnArr(undefined)).toStrictEqual(true);
+  expect(isFuncArr([F1, F2, F3])).toStrictEqual(true);
+  expect(isFuncArr([F1, F2, '2024-10-30T20:08:36.838Z'])).toStrictEqual(false);
+  expect(isFuncArr(F1)).toStrictEqual(false);
+  expect(isOptFuncArr([F1, F2, F3])).toStrictEqual(true);
+  expect(isOptFuncArr(undefined)).toStrictEqual(true);
+  expect(isNulFuncArr([F1, F2, F3])).toStrictEqual(true);
+  expect(isNulFuncArr(null)).toStrictEqual(true);
+  expect(isNishFuncArr([F1, F2, F3])).toStrictEqual(true);
+  expect(isNishFuncArr(null)).toStrictEqual(true);
+  expect(isNishFuncArr(undefined)).toStrictEqual(true);
 
   // Color
   expect(isColor('#ffffff')).toStrictEqual(true);
@@ -434,22 +450,16 @@ test('test "parseObj" function', () => {
   const parseUser = parseObj({
     id: transform(Number, isNum),
     name: isStr,
-  }); 
+  });
   const user = parseUser({
     id: '5',
     name: 'john',
     email: '--',
   });
-  const userBad = parseUser({
-    idd: '5',
-    name: 'john',
-    email: '--',
-  });
-  expect(user).toStrictEqual({ id: 5, name: 'john' });
-  expect(userBad).toStrictEqual(undefined);
+  expect(user).toStrictEqual({ id: 5, name: 'john', email: '--' });
 
   // ** Parse optional object ** //
-  const parseOptUser = optParseObj({
+  const parseOptUser = parseOptObj({
     id: isNum,
     name: isStr,
   });
@@ -459,7 +469,7 @@ test('test "parseObj" function', () => {
     email: '--',
   });
   const optUser2 = parseOptUser(undefined);
-  expect(optUser).toStrictEqual({ id: 15, name: 'joe' });
+  expect(optUser).toStrictEqual({ id: 15, name: 'joe', email: '--' });
   expect(optUser2).toStrictEqual(undefined);
 
   // ** Array Test ** //
@@ -475,7 +485,7 @@ test('test "parseObj" function', () => {
   expect(userArr).toStrictEqual(parsedUserArr);
   expect(parsedUserArrBad).toStrictEqual(undefined);
   // Nullish or array
-  const parseNishUserArr = nishParseObjArr({
+  const parseNishUserArr = parseNishObjArr({
     id: isNum,
     name: isStr,
   });
@@ -526,7 +536,7 @@ test('test "parseObj" function', () => {
   const parseUserWithError = parseObj({
     id: isNum,
     name: isStr,
-  },  (prop, value) => {
+  }, (prop, value) => {
     expect(prop).toStrictEqual('id');
     expect(value).toStrictEqual('5');
   });
@@ -551,7 +561,6 @@ test('test "parseObj" function', () => {
     { id: 3, name: '3' },
   ]);
 
-
   // ** Test "parseObj" when validator throws error ** //
   const isStrWithErr = (val: unknown): val is string => {
     if (isStr(val)) {
@@ -571,5 +580,57 @@ test('test "parseObj" function', () => {
   parseUserHandleErr({
     id: 5,
     name: null,
+  });
+});
+
+
+/**
+ * Test "testObj" function
+ */
+test('test "testObj" function', () => {
+
+  // Do basic test
+  const testUser = testObj({
+    id: isNum,
+    name: isStr,
+    address: {
+      city: isStr,
+      zip: transform(Number, isNum),
+    },
+  });
+  const result = testUser({
+    id: 5,
+    name: 'john',
+    address: {
+      city: 'Seattle',
+      zip: '98109',
+    },
+  });
+  expect(result).toStrictEqual(true);
+  
+  // Test combination of "parseObj" and "testObj"
+  const testCombo = parseObj({
+    id: isNum,
+    name: isStr,
+    address: testObj({
+      city: isStr,
+      zip: transform(Number, isNum),
+    }),
+  });
+  const user = testCombo({
+    id: 5,
+    name: 'john',
+    address: {
+      city: 'Seattle',
+      zip: '98109',
+    },
+  });
+  expect(user).toStrictEqual({
+    id: 5,
+    name: 'john',
+    address: {
+      city: 'Seattle',
+      zip: 98109,
+    },
   });
 });

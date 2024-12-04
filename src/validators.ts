@@ -84,14 +84,14 @@ export const isNulValidNumArr = _orNul(isValidNumArr);
 export const isNishValidNumArr = _orNul(isOptValidNumArr);
 
 // Range
-export const isRange = _isRangeBase<false, false, false>(false, false, false);
-export const isOptRange = _isRangeBase<true, false, false>(true, false, false);
-export const isNulRange = _isRangeBase<false, true, false>(false, true, false);
-export const isNishRange = _isRangeBase<true, true, false>(true, true, false);
-export const isRangeArr = _isRangeBase<false, false, true>(false, false, true);
-export const isOptRangeArr = _isRangeBase<true, false, true>(true, false, true);
-export const isNulRangeArr = _isRangeBase<false, true, true>(false, true, true);
-export const isNishRangeArr = _isRangeBase<true, true, true>(true, true, true);
+export const isInRange = _isInRange<false, false, false>(false, false, false);
+export const isOptInRange = _isInRange<true, false, false>(true, false, false);
+export const isNulInRange = _isInRange<false, true, false>(false, true, false);
+export const isNishInRange = _isInRange<true, true, false>(true, true, false);
+export const isInRangeArr = _isInRange<false, false, true>(false, false, true);
+export const isOptInRangeArr = _isInRange<true, false, true>(true, false, true);
+export const isNulInRangeArr = _isInRange<false, true, true>(false, true, true);
+export const isNishInRangeArr = _isInRange<true, true, true>(true, true, true);
 
 // String
 export const isStr = _checkType<string>('string');
@@ -112,6 +112,16 @@ export const isNeStrArr = _isArr(isNeStr);
 export const isOptNeStrArr = _orOpt(isNeStrArr);
 export const isNulNeStrArr = _orNul(isNeStrArr);
 export const isNishNeStrArr = _orNul(isOptNeStrArr);
+
+// Symbol
+export const isSymbol = _checkType<symbol>('symbol');
+export const isOptSymbol = _orOpt(isSymbol);
+export const isNulSymbol = _orNul(isSymbol);
+export const isNishSymbol = _orNul(isOptSymbol);
+export const isSymbolArr = _isArr(isSymbol);
+export const isOptSymbolArr = _orOpt(isSymbolArr);
+export const isNulSymbolArr = _orNul(isSymbolArr);
+export const isNishSymbolArr = _orNul(isOptSymbolArr);
 
 // Date
 export const isDate = (arg: unknown): arg is Date => arg instanceof Date;
@@ -144,14 +154,14 @@ export const isNulObjArr = _orNul(isObjArr);
 export const isNishObjArr = _orNul(isOptObjArr);
 
 // Function
-export const isFn = _checkType<TFunc>('function');
-export const isOptFn = _orOpt(isFn);
-export const isNulFn = _orNul(isFn);
-export const isNishFn = _orNul(isOptFn);
-export const isFnArr = _isArr(isFn);
-export const isOptFnArr = _orOpt(isFnArr);
-export const isNulFnArr = _orNul(isFnArr);
-export const isNishFnArr = _orNul(isOptFnArr);
+export const isFunc = _checkType<TFunc>('function');
+export const isOptFunc = _orOpt(isFunc);
+export const isNulFunc = _orNul(isFunc);
+export const isNishFunc = _orNul(isOptFunc);
+export const isFuncArr = _isArr(isFunc);
+export const isOptFuncArr = _orOpt(isFuncArr);
+export const isNulFuncArr = _orNul(isFuncArr);
+export const isNishFuncArr = _orNul(isOptFuncArr);
 
 // Color
 export const isColor = _isRgx<TColor>(COLOR_RGX);
@@ -183,10 +193,10 @@ export const isOptBasicObj = _orOpt(isBasicObj);
 export const isNishBasicObj = _orNul(isOptBasicObj);
 
 // Is in array
-export const isInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, false, false>(arg, false, false);
-export const isOptOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, true, false>(arg, true, false);
-export const isNulOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, false, true>(arg, false, true);
-export const isNishOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArrBase<T, true, true>(arg, true, true);
+export const isInArr = <T extends readonly unknown[]>(arg: T) => _isInArr<T, false, false>(arg, false, false);
+export const isOptOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArr<T, true, false>(arg, true, false);
+export const isNulOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArr<T, false, true>(arg, false, true);
+export const isNishOrInArr = <T extends readonly unknown[]>(arg: T) => _isInArr<T, true, true>(arg, true, true);
 
 // Enums (NOTE: this does not work for mixed enums see: eslint@typescript-eslint/no-mixed-enums)
 export const isEnum = _isEnum;
@@ -195,30 +205,40 @@ export const isNulEnum = _orNul(_isEnum);
 export const isNishEnum = _orNul(isOptEnum);
 
 // Is Enum value
-export const isEnumVal = <T>(arg: T) => _isEnumValBase<T, false, false>(arg, false, false);
-export const isOptEnumVal = <T>(arg: T) => _isEnumValBase<T, true, false>(arg, true, false);
-export const isNulEnumVal = <T>(arg: T) => _isEnumValBase<T, false, true>(arg, false, true);
-export const isNishEnumVal = <T>(arg: T) => _isEnumValBase<T, true, true>(arg, true, true);
+export const isEnumVal = <T>(arg: T) => _isEnumVal<T, false, false>(arg, false, false);
+export const isOptEnumVal = <T>(arg: T) => _isEnumVal<T, true, false>(arg, true, false);
+export const isNulEnumVal = <T>(arg: T) => _isEnumVal<T, false, true>(arg, false, true);
+export const isNishEnumVal = <T>(arg: T) => _isEnumVal<T, true, true>(arg, true, true);
 
 // Is Key of an Object
-export const isKeyOf = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, false, false, false>(arg, false, false, false);
-export const isOptKeyOf = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, true, false, false>(arg, true, false, false);
-export const isNulKeyOf = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, false, true, false>(arg, false, true, false);
-export const isNishKeyOf = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, true, true, false>(arg, true, true, false);
-export const isKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, false, false, true>(arg, false, false, true);
-export const isOptKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, true, false, true>(arg, true, false, true);
-export const isNulKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, false, true, true>(arg, false, true, true);
-export const isNishKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOfBase<T, true, true, true>(arg, true, true, true);
+export const isKeyOf = <T extends TBasicObj>(arg: T) => _isKeyOf<T, false, false, false>(arg, false, false, false);
+export const isOptKeyOf = <T extends TBasicObj>(arg: T) => _isKeyOf<T, true, false, false>(arg, true, false, false);
+export const isNulKeyOf = <T extends TBasicObj>(arg: T) => _isKeyOf<T, false, true, false>(arg, false, true, false);
+export const isNishKeyOf = <T extends TBasicObj>(arg: T) => _isKeyOf<T, true, true, false>(arg, true, true, false);
+export const isKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOf<T, false, false, true>(arg, false, false, true);
+export const isOptKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOf<T, true, false, true>(arg, true, false, true);
+export const isNulKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOf<T, false, true, true>(arg, false, true, true);
+export const isNishKeyOfArr = <T extends TBasicObj>(arg: T) => _isKeyOf<T, true, true, true>(arg, true, true, true);
 
 // Parse Object (check the properties against a schema)
 export const parseObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseObj<U, false, false, false>(arg, false, false, false, onError);
-export const optParseObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseObj<U, true, false, false>(arg, true, false, false, onError);
-export const nulParseObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseObj<U, false, true, false>(arg, false, true, false, onError);
-export const nishParseObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseObj<U, true, true, false>(arg, true, true, false, onError);
+export const parseOptObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseObj<U, true, false, false>(arg, true, false, false, onError);
+export const parseNulObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseObj<U, false, true, false>(arg, false, true, false, onError);
+export const parseNishObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _parseObj<U, true, true, false>(arg, true, true, false, onError);
 export const parseObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseObj<U, false, false, true>(arg, false, false, true, onError);
-export const optParseObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseObj<U, true, false, true>(arg, true, false, true, onError);
-export const nulParseObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseObj<U, false, true, true>(arg, false, true, true, onError);
-export const nishParseObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseObj<U, true, true, true>(arg, true, true, true, onError);
+export const parseOptObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseObj<U, true, false, true>(arg, true, false, true, onError);
+export const parseNulObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseObj<U, false, true, true>(arg, false, true, true, onError);
+export const parseNishObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _parseObj<U, true, true, true>(arg, true, true, true, onError);
+
+// Test Object (like "parseObj" but returns a type predicate instead)
+export const testObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _testObj<U, false, false, false>(arg, false, false, false, onError);
+export const testOptObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _testObj<U, true, false, false>(arg, true, false, false, onError);
+export const testNulObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _testObj<U, false, true, false>(arg, false, true, false, onError);
+export const testNishObj = <U extends TSchema>(arg: U, onError?: TParseOnError<false>) => _testObj<U, true, true, false>(arg, true, true, false, onError);
+export const testObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _testObj<U, false, false, true>(arg, false, false, true, onError);
+export const testOptObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _testObj<U, true, false, true>(arg, true, false, true, onError);
+export const testNulObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _testObj<U, false, true, true>(arg, false, true, true, onError);
+export const testNishObjArr = <U extends TSchema>(arg: U, onError?: TParseOnError<true>) => _testObj<U, true, true, true>(arg, true, true, true, onError);
 
 // Misc
 export const checkObjEntries = _checkObjEntries;
@@ -362,7 +382,7 @@ function _checkType<T>(type: string) {
 /**
  * Is an item in an array.
  */
-export function _isInArrBase<
+export function _isInArr<
   T extends readonly unknown[],
   O extends boolean,
   N extends boolean 
@@ -390,7 +410,7 @@ export function _isInArrBase<
 /**
  * Check is value satisfies enum.
  */
-function _isEnumValBase<T, 
+function _isEnumVal<T, 
   O extends boolean,
   N extends boolean
 >(
@@ -434,7 +454,7 @@ function _isEnumValBase<T,
  * isRange(100, null) => "greater than or equal to 100"
  * isRange(25, 75) => "between 25 and 75"
  */
-function _isRangeBase<
+function _isInRange<
   O extends boolean,
   N extends boolean,
   A extends boolean,
@@ -479,7 +499,7 @@ function _isRangeCore(arg: unknown, min: number | null, max: number | null) {
 /**
  * See if something is a key of an object.
  */
-function _isKeyOfBase<
+function _isKeyOf<
   T extends Record<string, unknown>,
   O extends boolean,
   N extends boolean,
@@ -576,6 +596,32 @@ function _safeJsonParse<T>(arg: unknown): T {
   }
 }
 
+/**
+ * Like "parseObj" but returns a type-predicate instead of the object.
+ */
+function _testObj<
+  U extends TSchema,
+  O extends boolean,
+  N extends boolean,
+  A extends boolean,
+>(
+  schema: U,
+  optional: O,
+  nullable: N,
+  isArr: A,
+  onError?: TParseOnError<A>,
+) {
+  const parseFn = _parseObj(schema, optional, nullable, isArr, onError);
+  return (arg: unknown): arg is typeof objRes => {
+    const objRes = parseFn(arg);
+    if (objRes === undefined) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+}
+
 
 // **** Parse Object **** //
 
@@ -604,8 +650,9 @@ type TParseOnError<A> = (
 );
 
 /**
- * validates an object schema, calls an error function is supplied one, returns 
- * "undefined" if the parse fails, and works recursively too.
+ * Validates an object schema, calls an error function is supplied one, returns 
+ * "undefined" if the parse fails, and works recursively too. NOTE: this will 
+ * purge all keys not part of the schema.
  */
 function _parseObj<
   U extends TSchema,
@@ -688,26 +735,26 @@ function _parseObjCoreHelper(
   schema: TSchema,
   arg: unknown,
   onError?: TParseOnError<false>,
-) {
+): unknown {
   if (!isObj(arg)) {
     return;
   }
-  const retVal: TBasicObj = {};
+  const retVal = (arg as TBasicObj);
   for (const key in schema) {
-    const schemaProp = schema[key];
-    let val = (arg as TBasicObj)[key];
+    const schemaProp = schema[key],
+      val = retVal[key];
     // Nested object
     if (typeof schemaProp === 'object') {
       const childVal = _parseObjCoreHelper(schemaProp, val, onError);
-      if (childVal !== undefined) {
-        val = childVal;
-      } else {
+      if (childVal === undefined) {
         return undefined;
       }
     // Run validator
     } else if (typeof schemaProp === 'function') {
       try {
-        if (!schemaProp(val, (tval: unknown) => val = tval)) {
+        if (!schemaProp(val, (tval: unknown) => {
+          retVal[key] = tval;
+        })) {
           return onError?.(key, val);
         }
       } catch (err) {
@@ -718,7 +765,6 @@ function _parseObjCoreHelper(
         }
       }
     }
-    retVal[key] = val;
   }
   // Return
   return retVal;
