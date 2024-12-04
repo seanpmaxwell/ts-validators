@@ -456,7 +456,7 @@ test('test "parseObj" function', () => {
     name: 'john',
     email: '--',
   });
-  expect(user).toStrictEqual({ id: 5, name: 'john', email: '--' });
+  expect(user).toStrictEqual({ id: 5, name: 'john' });
 
   // ** Parse optional object ** //
   const parseOptUser = parseOptObj({
@@ -469,7 +469,7 @@ test('test "parseObj" function', () => {
     email: '--',
   });
   const optUser2 = parseOptUser(undefined);
-  expect(optUser).toStrictEqual({ id: 15, name: 'joe', email: '--' });
+  expect(optUser).toStrictEqual({ id: 15, name: 'joe' });
   expect(optUser2).toStrictEqual(undefined);
 
   // ** Array Test ** //

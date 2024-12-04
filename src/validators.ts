@@ -766,6 +766,12 @@ function _parseObjCoreHelper(
       }
     }
   }
+  // Purse keys not in schema
+  for (const key in retVal) {
+    if (!(key in schema)) {
+      Reflect.deleteProperty(arg, key);
+    }
+  }
   // Return
   return retVal;
 }
