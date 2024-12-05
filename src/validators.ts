@@ -186,8 +186,9 @@ export const isNulAlphaNumStr = _orNul(isAlphaNumStr);
 export const isNishAlphaNumStr = _orNul(isOptAlphaNumStr);
 
 // Basic Objects
-export const isBasicObj = (arg: unknown): arg is TBasicObj => (isObj(arg) && !Array.isArray(arg) && isStrArr(Object.keys(arg)));
+export const isBasicObj = _isBasicObj;
 export const isOptBasicObj = _orOpt(isBasicObj);
+export const isNulBasicObj = _orNul(isBasicObj);
 export const isNishBasicObj = _orNul(isOptBasicObj);
 
 // Is in array
@@ -593,6 +594,13 @@ function _isEnumVal<T,
     }
     return resp.some(val => arg === val);
   };
+}
+
+/**
+ * Is the object Record<string, unknown>.
+ */
+function _isBasicObj(arg: unknown): arg is TBasicObj {
+  return (isObj(arg) && !Array.isArray(arg) && isStrArr(Object.keys(arg)));
 }
 
 
