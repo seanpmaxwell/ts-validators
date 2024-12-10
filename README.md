@@ -1,15 +1,6 @@
 # ts-validators
 
 
-This is not a library, this is just a collection of validator functions I frequently use and I'm putting here for sharing purposes. If you're using the `jet-schema` library you might find this collection of functions pretty useful.
+A collection of validator functions I frequently use and I'm putting here for sharing purposes. There's now a library version of this repo <a href="https://github.com/seanpmaxwell/jet-validators">jet-validators</a>.
 <br/>
 
-
-All the validator functions are in the `./src/validators.ts` file.
-<br/>
-
-
-Abbreviations used in naming functions:
-- `Opt` optional, (`value | undefined`)
-- `Nul` nullable, (`value | null`)
-- `Nish` nullish, (`value | null | undefined`)
